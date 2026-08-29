@@ -14,23 +14,28 @@ Toute reproduction, modification, distribution ou rétro-ingénierie non autoris
     <style>
         /* === VARIABLES & RESET === */
         :root {
-            /* Un fond beaucoup plus chaleureux (Crème vers Pêche/Rosé doux) */
+            /* Fond chaleureux (Crème vers Pêche/Rosé doux) */
             --bg-gradient: linear-gradient(135deg, #FFF0DF, #FFC1B6);
-            /* Des boutons plus visibles et vibrants, tout en restant premium */
+            /* Boutons vibrants */
             --btn-fille: linear-gradient(135deg, #FF89A3, #FFB3C6);
             --btn-garcon: linear-gradient(135deg, #5AB9EA, #88D8FF);
             --text-dark: #2c3e50;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg-gradient); color: var(--text-dark); min-height: 100vh; min-height: 100dvh; overflow: hidden; display: flex; flex-direction: column; }
+        
+        /* 100dvh est crucial pour Safari iOS : ça exclut la barre d'adresse dynamique */
+        body { font-family: 'Inter', sans-serif; background: var(--bg-gradient); color: var(--text-dark); min-height: 100dvh; overflow: hidden; display: flex; flex-direction: column; }
         
         /* === ASTUCE POUR FORCER LE CHARGEMENT DE LA POLICE MANUSCRITE === */
         .preload-font { font-family: 'Caveat', cursive; position: absolute; opacity: 0; pointer-events: none; z-index: -1; }
 
         /* === SCREENS === */
-        .screen { display: none; flex-direction: column; align-items: center; justify-content: center; width: 100vw; height: 100vh; height: 100dvh; padding: 20px; padding-bottom: 50px; position: absolute; top: 0; left: 0; }
+        .screen { display: none; flex-direction: column; align-items: center; justify-content: center; width: 100vw; height: 100dvh; padding: 20px; position: absolute; top: 0; left: 0; }
         .screen.active { display: flex; animation: fadeIn 0.4s ease forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Screen 2 & 3 spécifiques : On réduit le padding pour maximiser l'image et on utilise flex-start pour remonter les boutons */
+        #screen-edit, #screen-result { padding: 10px; padding-top: 20px; justify-content: flex-start; }
 
         /* === HEADER === */
         .header-copyright { 
@@ -50,7 +55,7 @@ Toute reproduction, modification, distribution ou rétro-ingénierie non autoris
         }
 
         /* === BUTTONS === */
-        .btn-container { width: 100%; max-width: 320px; display: flex; flex-direction: column; gap: 15px; margin-bottom: 40px; }
+        .btn-container { width: 100%; max-width: 350px; display: flex; flex-direction: column; gap: 15px; margin-bottom: 40px; }
         
         .btn {
             width: 100%; padding: 20px; border-radius: 18px; border: none;
@@ -62,8 +67,8 @@ Toute reproduction, modification, distribution ou rétro-ingénierie non autoris
         .btn-fille { background: var(--btn-fille); }
         .btn-garcon { background: var(--btn-garcon); }
         
-        .btn-action { background: rgba(255,255,255,0.7); backdrop-filter: blur(5px); border: 1px solid #fff; margin-bottom: 10px; padding: 15px; border-radius: 12px; color: var(--text-dark); text-shadow: none; font-weight: 700; box-shadow: 0 5px 15px rgba(0,0,0,0.05);}
-        .btn-primary { background: #2c3e50; color: #fff; margin-top: 10px; width: 100%; max-width: 400px; padding: 18px; border-radius: 16px; font-weight: 800; border: none; box-shadow: 0 10px 20px rgba(0,0,0,0.1); text-align: center; display: inline-block;}
+        .btn-action { background: rgba(255,255,255,0.7); backdrop-filter: blur(5px); border: 1px solid #fff; padding: 15px; border-radius: 12px; color: var(--text-dark); font-weight: 700; box-shadow: 0 5px 15px rgba(0,0,0,0.05);}
+        .btn-primary { background: #2c3e50; color: #fff; width: 100%; padding: 18px; border-radius: 16px; font-weight: 800; border: none; box-shadow: 0 10px 20px rgba(0,0,0,0.1); text-align: center; display: inline-block;}
         .btn-primary:active { transform: scale(0.97); }
 
         /* === PRIVACY DISCREET === */
@@ -73,18 +78,21 @@ Toute reproduction, modification, distribution ou rétro-ingénierie non autoris
             text-align: center;
             line-height: 1.4;
             max-width: 280px;
-            margin-top: 20px;
+            position: absolute;
+            bottom: 30px;
             font-weight: 600;
         }
 
-        /* === EDITOR (Screen 2) === */
-        .editor-container { position: relative; width: 100%; max-width: 400px; aspect-ratio: 9/16; background: #000; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        /* === EDITOR === */
+        /* Fond transparent au lieu de noir, et largeur maximisée (plus de bandes noires) */
+        .editor-container { position: relative; width: 100%; max-width: 450px; aspect-ratio: 9/16; background: transparent; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.2); margin: 0 auto; flex-shrink: 1; }
         #canvas-preview { width: 100%; height: 100%; object-fit: contain; }
 
         /* === TOUCH LAYER === */
         #touch-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 20; touch-action: none; }
         
-        .controls { width: 100%; max-width: 400px; margin-top: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 30; margin-bottom: 30px; }
+        /* Contrôles poussés vers le bas, mais avec une marge de sécurité pour iOS */
+        .controls { width: 100%; max-width: 400px; margin: 15px auto 25px auto; display: flex; flex-direction: column; gap: 10px; z-index: 30; }
 
         /* === HIDDEN ELEMENTS === */
         #file-input { display: none; }
@@ -93,7 +101,7 @@ Toute reproduction, modification, distribution ou rétro-ingénierie non autoris
 </head>
 <body>
     
-    <!-- Astuce pour forcer le téléchargement de la police manuscrite avant la génération du canvas -->
+    <!-- Préchargement invisible de la police -->
     <div class="preload-font">Préchargement de la police manuscrite</div>
 
     <!-- SCREEN 1: ACCUEIL -->
@@ -110,26 +118,21 @@ Toute reproduction, modification, distribution ou rétro-ingénierie non autoris
             <button class="btn btn-garcon" onclick="triggerFileSelect('garcon')">📷 Prendre en photo mon guerrier</button>
         </div>
         
-        <!-- Avertissement de sécurité déplacé en bas et rendu discret -->
         <div class="privacy-discreet">
             🔒 100 % privé & sécurisé<br>
             Aucune photo collectée. Traitement 100% local. Vous restez responsable de son utilisation.
         </div>
         
-        <!-- Sécurité : accept="image/*" permet de prendre une photo sans forcer le stockage externe -->
         <input type="file" id="file-input" accept="image/*">
     </div>
 
-    <!-- SCREEN 2: AJUSTEMENT (Guide visuel retiré) -->
+    <!-- SCREEN 2: AJUSTEMENT -->
     <div id="screen-edit" class="screen">
-        <p style="text-align: center; font-size: 12px; font-weight: 800; color: #2c3e50; margin-bottom: 10px; opacity: 0.7;">
+        <p style="text-align: center; font-size: 13px; font-weight: 800; color: #2c3e50; margin-bottom: 8px; opacity: 0.8;">
             Pincez pour zoomer / Glissez pour déplacer
         </p>
         <div class="editor-container">
-            <!-- Canvas pour la preview en temps réel -->
             <canvas id="canvas-preview"></canvas>
-            
-            <!-- Calque invisible pour capter les gestes tactiles sans bug -->
             <div id="touch-layer"></div>
         </div>
 
@@ -154,7 +157,6 @@ Toute reproduction, modification, distribution ou rétro-ingénierie non autoris
     <canvas id="render-canvas" width="1080" height="1920"></canvas>
 
     <script>
-        // === DONNÉES : PHRASES DE FIERTÉ ===
         const phrasesFilles = [
             "Aujourd’hui elle apprend à se dépasser, demain elle saura qu’elle peut tout affronter.",
             "Elle n’apprend pas seulement à être forte, elle apprend à croire en elle.",
@@ -201,7 +203,6 @@ Toute reproduction, modification, distribution ou rétro-ingénierie non autoris
             "Petit aujourd’hui, mais déjà de grandes valeurs pour demain."
         ];
 
-        // === ETAT GLOBAL ===
         let currentMode = 'fille'; 
         let userImage = new Image();
         let frameImage = new Image();
@@ -213,7 +214,6 @@ Toute reproduction, modification, distribution ou rétro-ingénierie non autoris
         const CANVAS_WIDTH = 1080;
         const CANVAS_HEIGHT = 1920;
 
-        // === NAVIGATION ===
         function showScreen(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
@@ -224,7 +224,6 @@ Toute reproduction, modification, distribution ou rétro-ingénierie non autoris
             showScreen('screen-home');
         }
 
-        // === CHARGEMENT PHOTO 100% LOCAL ===
         function triggerFileSelect(mode) {
             currentMode = mode;
             frameImage.src = mode === 'fille' ? 'cadre_fille.png' : 'cadre_garcon.png';
@@ -240,13 +239,11 @@ Toute reproduction, modification, distribution ou rétro-ingénierie non autoris
                     }
                     userImage.src = event.target.result;
                 }
-                reader.readAsDataURL(e.target.files[0]); // Lecture strictement locale
+                reader.readAsDataURL(e.target.files[0]);
             }
         });
 
-        // === EDITEUR & TACTILE (PAN / ZOOM) ===
         function initEditor() {
-            // Echelle initiale pour remplir l'écran
             const scaleX = CANVAS_WIDTH / userImage.width;
             const scaleY = CANVAS_HEIGHT / userImage.height;
             imgScale = Math.max(scaleX, scaleY) * 1.1; 
@@ -303,7 +300,6 @@ Toute reproduction, modification, distribution ou rétro-ingénierie non autoris
             if (e.touches.length === 0) isDragging = false;
         });
 
-        // === RENDU DU CANVAS ===
         function drawScene(ctx, width, height, withText = false) {
             // Couche 1 : Fond dégradé
             const gradient = ctx.createLinearGradient(0, 0, width, height);
@@ -315,38 +311,38 @@ Toute reproduction, modification, distribution ou rétro-ingénierie non autoris
             ctx.fillStyle = gradient;
             ctx.fillRect(0, 0, width, height);
 
-            // Couche 2 : Photo de l'enfant avec Filtre POLAROID VINTAGE
+            // Couche 2 : Photo de l'enfant avec Filtre Vintage FORT
             ctx.save();
             ctx.translate(width / 2, height / 2 - 100); 
             ctx.rotate(7 * Math.PI / 180); 
             ctx.translate(imgPosX, imgPosY);
             ctx.scale(imgScale, imgScale);
             
-            // ---> APPLICATION DU FILTRE VINTAGE / POLAROID UNIQUEMENT ICI <---
-            // Effet accentué : plus de sépia, plus de contraste et flou renforcé (1.5px) pour être bien visible
-            ctx.filter = 'contrast(1.2) sepia(0.4) saturate(1.2) brightness(0.9) blur(1.5px)';
+            // --- LE FILTRE POLAROID ACCENTUÉ ---
+            // contrast: booste les ombres | sepia: jaunit | saturate: ravive les couleurs | brightness: assombrit un peu
+            ctx.filter = 'contrast(1.3) sepia(0.6) saturate(1.4) brightness(0.9)';
             
             ctx.drawImage(userImage, -userImage.width / 2, -userImage.height / 2);
-            ctx.restore();
+            ctx.restore(); // Annule le filtre pour que le cadre et le texte ne soient pas impactés
 
             // Couche 3 : Cadre Polaroïd PNG
             if (frameImage.complete && frameImage.naturalHeight !== 0) {
                 ctx.drawImage(frameImage, 0, 0, width, height);
             }
 
-            // Couche 4 : Texte manuscrit (seulement à la validation finale)
+            // Couche 4 : Texte manuscrit
             if (withText) {
                 const phrases = currentMode === 'fille' ? phrasesFilles : phrasesGarcons;
                 const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
                 
-                // Forcer explicitement la police manuscrite Caveat
-                ctx.font = "bold 90px 'Caveat', cursive";
+                ctx.font = "bold 95px 'Caveat', cursive";
                 ctx.fillStyle = "#1a1a1a";
                 ctx.textAlign = "center";
                 ctx.textBaseline = "middle";
                 
-                // Remplissage dynamique sur le bas de l'image (Y remonté de -250 à -380 par rapport à l'ancien code)
-                wrapText(ctx, randomPhrase, width / 2, height - 380, width - 150, 95);
+                // --- POSITION AJUSTÉE ---
+                // Descendu de -380 à -150 pour être bien placé en bas
+                wrapText(ctx, randomPhrase, width / 2, height - 150, width - 150, 95);
             }
         }
 
@@ -376,12 +372,10 @@ Toute reproduction, modification, distribution ou rétro-ingénierie non autoris
             drawScene(ctx, CANVAS_WIDTH, CANVAS_HEIGHT, false);
         }
 
-        // === VALIDATION FINALE & EXPORT ===
         function generateFinal() {
             const renderCanvas = document.getElementById('render-canvas');
             const ctx = renderCanvas.getContext('2d');
             
-            // Génération de l'image finale HD
             drawScene(ctx, CANVAS_WIDTH, CANVAS_HEIGHT, true);
             const dataUrl = renderCanvas.toDataURL('image/jpeg', 0.95);
             
