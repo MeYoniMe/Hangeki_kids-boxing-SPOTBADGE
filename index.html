@@ -1,0 +1,397 @@
+<!--
+Copyright (c) 2026 Bressard Yoni. All Rights Reserved. Tous droits réservés.
+Ce code source et son architecture logicielle sont la propriété exclusive de Bressard Yoni.
+Toute reproduction, modification, distribution ou rétro-ingénierie non autorisée est strictement interdite.
+-->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Diplôme Officiel - B.C Han-Geki</title>
+    <!-- Polices Google : Caveat pour l'écriture manuscrite, Inter pour le design moderne -->
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* === VARIABLES & RESET === */
+        :root {
+            --bg-gradient: linear-gradient(135deg, #FFF9E6, #FFE8E8);
+            --glass-bg: rgba(255, 255, 255, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.6);
+            --btn-fille: linear-gradient(135deg, #FFD1DC, #E8D7FF);
+            --btn-garcon: linear-gradient(135deg, #D0E8FF, #FFB3B3);
+            --text-dark: #2c3e50;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-gradient); color: var(--text-dark); min-height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+        
+        /* === SCREENS === */
+        .screen { display: none; flex-direction: column; align-items: center; justify-content: center; width: 100vw; height: 100vh; padding: 20px; position: absolute; top: 0; left: 0; }
+        .screen.active { display: flex; animation: fadeIn 0.4s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* === HEADER & GLASSMORPHISM === */
+        .header-copyright { 
+            position: absolute; top: 15px; left: 20px; 
+            font-size: 10px; font-weight: 800; color: rgba(0,0,0,0.4); 
+            z-index: 100; padding: 5px;
+        }
+        
+        .glass-card {
+            background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border); border-radius: 20px;
+            padding: 20px; width: 100%; max-width: 400px; box-shadow: 0 8px 32px rgba(0,0,0,0.05);
+            margin-bottom: 25px; text-align: left;
+        }
+        .privacy-title { font-weight: 800; font-size: 14px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; color: #1a202c;}
+        .privacy-list { font-size: 11px; line-height: 1.5; list-style: none; color: #4a5568; font-weight: 600;}
+        .privacy-list li { margin-bottom: 4px; }
+        
+        .accroche { font-size: 16px; font-weight: 800; text-align: center; margin-bottom: 30px; line-height: 1.3; }
+
+        /* === BUTTONS === */
+        .btn {
+            width: 100%; max-width: 320px; padding: 18px; border-radius: 16px; border: none;
+            font-size: 16px; font-weight: 800; color: var(--text-dark); display: flex; align-items: center; justify-content: center; gap: 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08); transition: transform 0.15s ease, box-shadow 0.15s ease;
+            margin-bottom: 15px; cursor: pointer;
+        }
+        .btn:active { transform: scale(0.97); box-shadow: 0 5px 10px rgba(0,0,0,0.05); }
+        .btn-fille { background: var(--btn-fille); }
+        .btn-garcon { background: var(--btn-garcon); }
+        .btn-action { background: rgba(255,255,255,0.8); backdrop-filter: blur(5px); border: 1px solid #fff; margin-bottom: 10px; padding: 15px; border-radius: 12px; }
+        .btn-primary { background: #2c3e50; color: #fff; margin-top: 10px; }
+
+        /* === EDITOR (Screen 2) === */
+        .editor-container { position: relative; width: 100%; max-width: 400px; aspect-ratio: 9/16; background: #000; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        #canvas-preview { width: 100%; height: 100%; object-fit: contain; }
+        
+        /* === VISUAL GUIDE OVERLAY === */
+        .guide-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10;
+        }
+        .guide-head { width: 45%; aspect-ratio: 3/4; border: 3px dashed rgba(255,255,255,0.8); border-radius: 50%; position: relative; top: -10%; }
+        .guide-glove-left, .guide-glove-right {
+            position: absolute; width: 25%; aspect-ratio: 1; border: 3px dashed rgba(255,255,255,0.8); border-radius: 50%; bottom: -10%; background: rgba(255,255,255,0.1);
+        }
+        .guide-glove-left { left: -15%; }
+        .guide-glove-right { right: -15%; }
+        .guide-text { position: absolute; bottom: 12%; color: #fff; font-size: 13px; font-weight: 800; text-align: center; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+
+        /* === TOUCH LAYER === */
+        #touch-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 20; touch-action: none; }
+        
+        .controls { width: 100%; max-width: 400px; margin-top: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 30; }
+
+        /* === HIDDEN ELEMENTS === */
+        #file-input { display: none; }
+        #render-canvas { display: none; }
+    </style>
+</head>
+<body>
+
+    <!-- SCREEN 1: ACCUEIL -->
+    <div id="screen-home" class="screen active">
+        <!-- Copyright Yoni Brd -->
+        <div class="header-copyright">© Copyright Yoni Brd</div>
+        
+        <div class="glass-card">
+            <div class="privacy-title">🔒 100 % privé & sécurisé</div>
+            <ul class="privacy-list">
+                <li>• Aucune photo ni donnée personnelle n'est collectée.</li>
+                <li>• Tout est traité localement sur votre appareil.</li>
+                <li>• Votre photo ne quitte jamais votre appareil.</li>
+                <li>• Vous restez responsable de son utilisation.</li>
+            </ul>
+        </div>
+
+        <div class="accroche">
+            🥊 Mets ta plus belle garde de champion(ne) !<br>Gants levés au niveau des joues !
+        </div>
+
+        <button class="btn btn-fille" onclick="triggerFileSelect('fille')">🌸 Photo de ma guerrière</button>
+        <button class="btn btn-garcon" onclick="triggerFileSelect('garcon')">⚡ Photo de mon guerrier</button>
+        
+        <!-- Sécurité : accept="image/*" permet de prendre une photo sans forcer le stockage externe -->
+        <input type="file" id="file-input" accept="image/*">
+    </div>
+
+    <!-- SCREEN 2: AJUSTEMENT -->
+    <div id="screen-edit" class="screen">
+        <div class="editor-container">
+            <!-- Canvas pour la preview en temps réel -->
+            <canvas id="canvas-preview"></canvas>
+            
+            <!-- Guide visuel de boxe (visage + gants) -->
+            <div class="guide-overlay" id="guide-overlay">
+                <div class="guide-head">
+                    <div class="guide-glove-left"></div>
+                    <div class="guide-glove-right"></div>
+                </div>
+                <div class="guide-text">Centrez le visage et les gants ici<br>Pincez pour zoomer / Glissez pour déplacer</div>
+            </div>
+
+            <!-- Calque invisible pour capter les gestes tactiles sans bug -->
+            <div id="touch-layer"></div>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-action" onclick="resetApp()">🔄 Changer de photo</button>
+            <button class="btn btn-primary" onclick="generateFinal()">✨ Validation officielle Team Hangeki</button>
+        </div>
+    </div>
+
+    <!-- SCREEN 3: RÉSULTAT FINAL -->
+    <div id="screen-result" class="screen">
+        <div class="editor-container" style="box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+            <img id="final-image" style="width: 100%; height: 100%; object-fit: contain;" alt="Diplôme Hangeki">
+        </div>
+        <div class="controls">
+            <a id="download-link" class="btn btn-primary" style="text-decoration: none;">💾 Enregistrer dans mes Photos</a>
+            <p style="font-size: 11px; text-align: center; opacity: 0.6; margin-top: 5px;">(Sur iPhone, maintenez le doigt sur la photo pour l'enregistrer)</p>
+        </div>
+    </div>
+
+    <!-- Canvas caché pour le rendu final HD (1080x1920) -->
+    <canvas id="render-canvas" width="1080" height="1920"></canvas>
+
+    <script>
+        // === DONNÉES : PHRASES DE FIERTÉ ===
+        const phrasesFilles = [
+            "Aujourd’hui elle apprend à se dépasser, demain elle saura qu’elle peut tout affronter.",
+            "Elle n’apprend pas seulement à être forte, elle apprend à croire en elle.",
+            "Chaque entraînement construit un peu plus la femme qu’elle deviendra.",
+            "Elle apprend à tomber, à se relever et à continuer d’avancer.",
+            "La vraie victoire, c’est de devenir chaque jour une meilleure version de soi-même.",
+            "Elle grandit en force, mais surtout en confiance.",
+            "Elle découvre ses limites pour mieux les repousser.",
+            "Aujourd’hui elle apprend le courage, demain elle le portera dans la vie.",
+            "Elle ne cherche pas à être meilleure que les autres, mais meilleure qu’hier.",
+            "Derrière chaque progrès se cache beaucoup de courage.",
+            "Elle apprend que l’effort d’aujourd’hui construit la confiance de demain.",
+            "Elle apprend à gagner avec humilité et à perdre avec courage.",
+            "Elle grandit avec une force que personne ne pourra lui enlever.",
+            "Le sport lui apprend à ne jamais abandonner ce en quoi elle croit.",
+            "Elle apprend que les plus belles victoires sont celles que l’on gagne sur soi-même.",
+            "Elle avance, progresse, grandit… fiers de la voir devenir elle-même.",
+            "Aujourd’hui elle franchit de petits obstacles, demain les grands.",
+            "Le courage n’est pas de ne jamais avoir peur, mais d’avancer malgré tout.",
+            "Chaque effort laisse une trace dans la personne qu’elle devient.",
+            "Petite aujourd’hui, mais déjà de grandes valeurs pour demain."
+        ];
+
+        const phrasesGarcons = [
+            "Aujourd’hui il apprend à se dépasser, demain il saura qu’il peut tout affronter.",
+            "Il n’apprend pas seulement à être fort, il apprend à croire en lui.",
+            "Chaque entraînement construit un peu plus l’homme qu’il deviendra.",
+            "Il apprend à tomber, à se relever et à continuer d’avancer.",
+            "La vraie victoire, c’est de devenir chaque jour une meilleure version de soi-même.",
+            "Il grandit en force, mais surtout en confiance.",
+            "Il découvre ses limites pour mieux les repousser.",
+            "Aujourd’hui il apprend le courage, demain il le portera dans la vie.",
+            "Il ne cherche pas à être meilleur que les autres, mais meilleur qu’hier.",
+            "Derrière chaque progrès se cache beaucoup de courage.",
+            "Il apprend que l’effort d’aujourd’hui construit la confiance de demain.",
+            "Il apprend à gagner avec humilité et à perdre avec courage.",
+            "Il grandit avec une force que personne ne pourra lui enlever.",
+            "Le sport lui apprend à ne jamais abandonner ce en quoi il croit.",
+            "Il apprend que les plus belles victoires sont celles que l’on gagne sur soi-même.",
+            "Il avance, progresse, grandit… fiers de le voir devenir lui-même.",
+            "Aujourd’hui il franchit de petits obstacles, demain les grands.",
+            "Le courage n’est pas de ne jamais avoir peur, mais d’avancer malgré tout.",
+            "Chaque effort laisse une trace dans la personne qu’il devient.",
+            "Petit aujourd’hui, mais déjà de grandes valeurs pour demain."
+        ];
+
+        // === ETAT GLOBAL ===
+        let currentMode = 'fille'; 
+        let userImage = new Image();
+        let frameImage = new Image();
+        
+        let imgScale = 1;
+        let imgPosX = 0;
+        let imgPosY = 0;
+        
+        const CANVAS_WIDTH = 1080;
+        const CANVAS_HEIGHT = 1920;
+
+        // === NAVIGATION ===
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function resetApp() {
+            document.getElementById('file-input').value = '';
+            showScreen('screen-home');
+        }
+
+        // === CHARGEMENT PHOTO 100% LOCAL ===
+        function triggerFileSelect(mode) {
+            currentMode = mode;
+            frameImage.src = mode === 'fille' ? 'cadre_fille.png' : 'cadre_garcon.png';
+            document.getElementById('file-input').click();
+        }
+
+        document.getElementById('file-input').addEventListener('change', function(e) {
+            if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    userImage.onload = function() {
+                        initEditor();
+                    }
+                    userImage.src = event.target.result;
+                }
+                reader.readAsDataURL(e.target.files[0]); // Lecture strictement locale
+            }
+        });
+
+        // === EDITEUR & TACTILE (PAN / ZOOM) ===
+        function initEditor() {
+            // Echelle initiale pour remplir l'écran
+            const scaleX = CANVAS_WIDTH / userImage.width;
+            const scaleY = CANVAS_HEIGHT / userImage.height;
+            imgScale = Math.max(scaleX, scaleY) * 1.1; 
+            imgPosX = 0;
+            imgPosY = 0;
+
+            showScreen('screen-edit');
+            renderPreview();
+        }
+
+        const touchLayer = document.getElementById('touch-layer');
+        let isDragging = false;
+        let startDistance = 0;
+        let initialScale = 1;
+        let startX = 0, startY = 0;
+        let initPosX = 0, initPosY = 0;
+
+        function getDistance(touches) {
+            return Math.hypot(touches[0].clientX - touches[1].clientX, touches[0].clientY - touches[1].clientY);
+        }
+
+        touchLayer.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            if (e.touches.length === 1) {
+                isDragging = true;
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+                initPosX = imgPosX;
+                initPosY = imgPosY;
+            } else if (e.touches.length === 2) {
+                isDragging = false;
+                startDistance = getDistance(e.touches);
+                initialScale = imgScale;
+            }
+        }, {passive: false});
+
+        touchLayer.addEventListener('touchmove', function(e) {
+            e.preventDefault();
+            if (e.touches.length === 1 && isDragging) {
+                const dx = (e.touches[0].clientX - startX) * 3; 
+                const dy = (e.touches[0].clientY - startY) * 3;
+                imgPosX = initPosX + dx;
+                imgPosY = initPosY + dy;
+                renderPreview();
+            } else if (e.touches.length === 2) {
+                const currentDistance = getDistance(e.touches);
+                imgScale = initialScale * (currentDistance / startDistance);
+                renderPreview();
+            }
+        }, {passive: false});
+
+        touchLayer.addEventListener('touchend', function(e) {
+            if (e.touches.length < 2) startDistance = 0;
+            if (e.touches.length === 0) isDragging = false;
+        });
+
+        // === RENDU DU CANVAS (Le Cœur du Système) ===
+        function drawScene(ctx, width, height, withText = false) {
+            // Couche 1 : Fond dégradé
+            const gradient = ctx.createLinearGradient(0, 0, width, height);
+            if (currentMode === 'fille') {
+                gradient.addColorStop(0, '#FFF9E6'); gradient.addColorStop(1, '#FFD1DC');
+            } else {
+                gradient.addColorStop(0, '#FFF9E6'); gradient.addColorStop(1, '#D0E8FF');
+            }
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, width, height);
+
+            // Couche 2 : Photo de l'enfant
+            ctx.save();
+            ctx.translate(width / 2, height / 2 - 100); 
+            // INCLINAISON EXACTE DEMANDÉE : 7 degrés dans le SENS HORLOGIQUE (positif)
+            ctx.rotate(7 * Math.PI / 180); 
+            ctx.translate(imgPosX, imgPosY);
+            ctx.scale(imgScale, imgScale);
+            ctx.drawImage(userImage, -userImage.width / 2, -userImage.height / 2);
+            ctx.restore();
+
+            // Couche 3 : Cadre Polaroïd PNG (inviolable par-dessus la photo)
+            if (frameImage.complete && frameImage.naturalHeight !== 0) {
+                ctx.drawImage(frameImage, 0, 0, width, height);
+            }
+
+            // Couche 4 : Texte manuscrit (seulement à la validation finale)
+            if (withText) {
+                const phrases = currentMode === 'fille' ? phrasesFilles : phrasesGarcons;
+                const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
+                
+                ctx.font = "80px Caveat";
+                ctx.fillStyle = "#1a1a1a";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                
+                // Remplissage dynamique sur le bas du Polaroïd
+                wrapText(ctx, randomPhrase, width / 2, height - 250, width - 150, 90);
+            }
+        }
+
+        function wrapText(context, text, x, y, maxWidth, lineHeight) {
+            const words = text.split(' ');
+            let line = '';
+            for(let n = 0; n < words.length; n++) {
+                const testLine = line + words[n] + ' ';
+                const metrics = context.measureText(testLine);
+                if (metrics.width > maxWidth && n > 0) {
+                    context.fillText(line.trim(), x, y);
+                    line = words[n] + ' ';
+                    y += lineHeight;
+                } else {
+                    line = testLine;
+                }
+            }
+            context.fillText(line.trim(), x, y);
+        }
+
+        function renderPreview() {
+            const previewCanvas = document.getElementById('canvas-preview');
+            previewCanvas.width = CANVAS_WIDTH / 2;
+            previewCanvas.height = CANVAS_HEIGHT / 2;
+            const ctx = previewCanvas.getContext('2d');
+            ctx.scale(0.5, 0.5);
+            drawScene(ctx, CANVAS_WIDTH, CANVAS_HEIGHT, false);
+        }
+
+        // === VALIDATION FINALE & EXPORT ===
+        function generateFinal() {
+            document.getElementById('guide-overlay').style.display = 'none';
+            
+            const renderCanvas = document.getElementById('render-canvas');
+            const ctx = renderCanvas.getContext('2d');
+            
+            // Génération de l'image finale HD
+            drawScene(ctx, CANVAS_WIDTH, CANVAS_HEIGHT, true);
+            const dataUrl = renderCanvas.toDataURL('image/jpeg', 0.95);
+            
+            document.getElementById('final-image').src = dataUrl;
+            
+            const downloadBtn = document.getElementById('download-link');
+            downloadBtn.href = dataUrl;
+            downloadBtn.download = `Diplome-Hangeki-${currentMode}.jpg`;
+            
+            showScreen('screen-result');
+        }
+    </script>
+</body>
+</html>
