@@ -14,69 +14,72 @@ Toute reproduction, modification, distribution ou rétro-ingénierie non autoris
     <style>
         /* === VARIABLES & RESET === */
         :root {
-            --bg-gradient: linear-gradient(135deg, #FFF9E6, #FFE8E8);
-            --glass-bg: rgba(255, 255, 255, 0.45);
-            --glass-border: rgba(255, 255, 255, 0.6);
-            --btn-fille: linear-gradient(135deg, #FFD1DC, #E8D7FF);
-            --btn-garcon: linear-gradient(135deg, #D0E8FF, #FFB3B3);
+            /* Un fond beaucoup plus chaleureux (Crème vers Pêche/Rosé doux) */
+            --bg-gradient: linear-gradient(135deg, #FFF0DF, #FFC1B6);
+            /* Des boutons plus visibles et vibrants, tout en restant premium */
+            --btn-fille: linear-gradient(135deg, #FF89A3, #FFB3C6);
+            --btn-garcon: linear-gradient(135deg, #5AB9EA, #88D8FF);
             --text-dark: #2c3e50;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
         body { font-family: 'Inter', sans-serif; background: var(--bg-gradient); color: var(--text-dark); min-height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
         
+        /* === ASTUCE POUR FORCER LE CHARGEMENT DE LA POLICE MANUSCRITE === */
+        .preload-font { font-family: 'Caveat', cursive; position: absolute; opacity: 0; pointer-events: none; z-index: -1; }
+
         /* === SCREENS === */
         .screen { display: none; flex-direction: column; align-items: center; justify-content: center; width: 100vw; height: 100vh; padding: 20px; position: absolute; top: 0; left: 0; }
         .screen.active { display: flex; animation: fadeIn 0.4s ease forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* === HEADER & GLASSMORPHISM === */
+        /* === HEADER === */
         .header-copyright { 
             position: absolute; top: 15px; left: 20px; 
-            font-size: 10px; font-weight: 800; color: rgba(0,0,0,0.4); 
+            font-size: 10px; font-weight: 800; color: rgba(0,0,0,0.3); 
             z-index: 100; padding: 5px;
         }
         
-        .glass-card {
-            background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border); border-radius: 20px;
-            padding: 20px; width: 100%; max-width: 400px; box-shadow: 0 8px 32px rgba(0,0,0,0.05);
-            margin-bottom: 25px; text-align: left;
+        .accroche { 
+            font-size: 18px; 
+            font-weight: 800; 
+            text-align: center; 
+            margin-bottom: 40px; 
+            line-height: 1.4; 
+            color: #1a202c;
+            text-shadow: 0 2px 10px rgba(255,255,255,0.5);
         }
-        .privacy-title { font-weight: 800; font-size: 14px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; color: #1a202c;}
-        .privacy-list { font-size: 11px; line-height: 1.5; list-style: none; color: #4a5568; font-weight: 600;}
-        .privacy-list li { margin-bottom: 4px; }
-        
-        .accroche { font-size: 16px; font-weight: 800; text-align: center; margin-bottom: 30px; line-height: 1.3; }
 
         /* === BUTTONS === */
+        .btn-container { width: 100%; max-width: 320px; display: flex; flex-direction: column; gap: 15px; margin-bottom: 40px; }
+        
         .btn {
-            width: 100%; max-width: 320px; padding: 18px; border-radius: 16px; border: none;
-            font-size: 16px; font-weight: 800; color: var(--text-dark); display: flex; align-items: center; justify-content: center; gap: 10px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.08); transition: transform 0.15s ease, box-shadow 0.15s ease;
-            margin-bottom: 15px; cursor: pointer;
+            width: 100%; padding: 20px; border-radius: 18px; border: none;
+            font-size: 17px; font-weight: 800; color: #fff; display: flex; align-items: center; justify-content: center; gap: 10px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15); transition: transform 0.15s ease, box-shadow 0.15s ease;
+            cursor: pointer; text-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
-        .btn:active { transform: scale(0.97); box-shadow: 0 5px 10px rgba(0,0,0,0.05); }
+        .btn:active { transform: scale(0.96); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .btn-fille { background: var(--btn-fille); }
         .btn-garcon { background: var(--btn-garcon); }
-        .btn-action { background: rgba(255,255,255,0.8); backdrop-filter: blur(5px); border: 1px solid #fff; margin-bottom: 10px; padding: 15px; border-radius: 12px; }
-        .btn-primary { background: #2c3e50; color: #fff; margin-top: 10px; }
+        
+        .btn-action { background: rgba(255,255,255,0.7); backdrop-filter: blur(5px); border: 1px solid #fff; margin-bottom: 10px; padding: 15px; border-radius: 12px; color: var(--text-dark); text-shadow: none; font-weight: 700; box-shadow: 0 5px 15px rgba(0,0,0,0.05);}
+        .btn-primary { background: #2c3e50; color: #fff; margin-top: 10px; width: 100%; max-width: 400px; padding: 18px; border-radius: 16px; font-weight: 800; border: none; box-shadow: 0 10px 20px rgba(0,0,0,0.1); text-align: center; display: inline-block;}
+        .btn-primary:active { transform: scale(0.97); }
+
+        /* === PRIVACY DISCREET === */
+        .privacy-discreet {
+            font-size: 10px;
+            color: rgba(0,0,0,0.4);
+            text-align: center;
+            line-height: 1.4;
+            max-width: 280px;
+            margin-top: 20px;
+            font-weight: 600;
+        }
 
         /* === EDITOR (Screen 2) === */
         .editor-container { position: relative; width: 100%; max-width: 400px; aspect-ratio: 9/16; background: #000; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
         #canvas-preview { width: 100%; height: 100%; object-fit: contain; }
-        
-        /* === VISUAL GUIDE OVERLAY === */
-        .guide-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;
-            display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10;
-        }
-        .guide-head { width: 45%; aspect-ratio: 3/4; border: 3px dashed rgba(255,255,255,0.8); border-radius: 50%; position: relative; top: -10%; }
-        .guide-glove-left, .guide-glove-right {
-            position: absolute; width: 25%; aspect-ratio: 1; border: 3px dashed rgba(255,255,255,0.8); border-radius: 50%; bottom: -10%; background: rgba(255,255,255,0.1);
-        }
-        .guide-glove-left { left: -15%; }
-        .guide-glove-right { right: -15%; }
-        .guide-text { position: absolute; bottom: 12%; color: #fff; font-size: 13px; font-weight: 800; text-align: center; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
 
         /* === TOUCH LAYER === */
         #touch-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 20; touch-action: none; }
@@ -89,55 +92,50 @@ Toute reproduction, modification, distribution ou rétro-ingénierie non autoris
     </style>
 </head>
 <body>
+    
+    <!-- Astuce pour forcer le téléchargement de la police manuscrite avant la génération du canvas -->
+    <div class="preload-font">Préchargement de la police manuscrite</div>
 
     <!-- SCREEN 1: ACCUEIL -->
     <div id="screen-home" class="screen active">
         <!-- Copyright Yoni Brd -->
         <div class="header-copyright">© Copyright Yoni Brd</div>
         
-        <div class="glass-card">
-            <div class="privacy-title">🔒 100 % privé & sécurisé</div>
-            <ul class="privacy-list">
-                <li>• Aucune photo ni donnée personnelle n'est collectée.</li>
-                <li>• Tout est traité localement sur votre appareil.</li>
-                <li>• Votre photo ne quitte jamais votre appareil.</li>
-                <li>• Vous restez responsable de son utilisation.</li>
-            </ul>
-        </div>
-
         <div class="accroche">
-            🥊 Mets ta plus belle garde de champion(ne) !<br>Gants levés au niveau des joues !
+            🥊 Mets-toi en garde, champion(ne) !<br>Gants bien hauts, au niveau des joues,<br>et regarde l’objectif !
         </div>
 
-        <button class="btn btn-fille" onclick="triggerFileSelect('fille')">🌸 Photo de ma guerrière</button>
-        <button class="btn btn-garcon" onclick="triggerFileSelect('garcon')">⚡ Photo de mon guerrier</button>
+        <div class="btn-container">
+            <button class="btn btn-fille" onclick="triggerFileSelect('fille')">🌸 Photo de ma guerrière</button>
+            <button class="btn btn-garcon" onclick="triggerFileSelect('garcon')">⚡ Photo de mon guerrier</button>
+        </div>
+        
+        <!-- Avertissement de sécurité déplacé en bas et rendu discret -->
+        <div class="privacy-discreet">
+            🔒 100 % privé & sécurisé<br>
+            Aucune photo collectée. Traitement 100% local. Vous restez responsable de son utilisation.
+        </div>
         
         <!-- Sécurité : accept="image/*" permet de prendre une photo sans forcer le stockage externe -->
         <input type="file" id="file-input" accept="image/*">
     </div>
 
-    <!-- SCREEN 2: AJUSTEMENT -->
+    <!-- SCREEN 2: AJUSTEMENT (Guide visuel retiré) -->
     <div id="screen-edit" class="screen">
+        <p style="text-align: center; font-size: 12px; font-weight: 800; color: #2c3e50; margin-bottom: 10px; opacity: 0.7;">
+            Pincez pour zoomer / Glissez pour déplacer
+        </p>
         <div class="editor-container">
             <!-- Canvas pour la preview en temps réel -->
             <canvas id="canvas-preview"></canvas>
             
-            <!-- Guide visuel de boxe (visage + gants) -->
-            <div class="guide-overlay" id="guide-overlay">
-                <div class="guide-head">
-                    <div class="guide-glove-left"></div>
-                    <div class="guide-glove-right"></div>
-                </div>
-                <div class="guide-text">Centrez le visage et les gants ici<br>Pincez pour zoomer / Glissez pour déplacer</div>
-            </div>
-
             <!-- Calque invisible pour capter les gestes tactiles sans bug -->
             <div id="touch-layer"></div>
         </div>
 
         <div class="controls">
-            <button class="btn btn-action" onclick="resetApp()">🔄 Changer de photo</button>
-            <button class="btn btn-primary" onclick="generateFinal()">✨ Validation officielle Team Hangeki</button>
+            <button class="btn-action" onclick="resetApp()">🔄 Changer de photo</button>
+            <button class="btn-primary" onclick="generateFinal()">✨ Validation officielle Team Hangeki</button>
         </div>
     </div>
 
@@ -147,8 +145,8 @@ Toute reproduction, modification, distribution ou rétro-ingénierie non autoris
             <img id="final-image" style="width: 100%; height: 100%; object-fit: contain;" alt="Diplôme Hangeki">
         </div>
         <div class="controls">
-            <a id="download-link" class="btn btn-primary" style="text-decoration: none;">💾 Enregistrer dans mes Photos</a>
-            <p style="font-size: 11px; text-align: center; opacity: 0.6; margin-top: 5px;">(Sur iPhone, maintenez le doigt sur la photo pour l'enregistrer)</p>
+            <a id="download-link" class="btn-primary" style="text-decoration: none;">💾 Enregistrer dans mes Photos</a>
+            <p style="font-size: 11px; text-align: center; opacity: 0.6; margin-top: 5px; font-weight: 600;">(Sur iPhone, maintenez le doigt sur la photo pour l'enregistrer)</p>
         </div>
     </div>
 
@@ -305,7 +303,7 @@ Toute reproduction, modification, distribution ou rétro-ingénierie non autoris
             if (e.touches.length === 0) isDragging = false;
         });
 
-        // === RENDU DU CANVAS (Le Cœur du Système) ===
+        // === RENDU DU CANVAS ===
         function drawScene(ctx, width, height, withText = false) {
             // Couche 1 : Fond dégradé
             const gradient = ctx.createLinearGradient(0, 0, width, height);
@@ -317,17 +315,21 @@ Toute reproduction, modification, distribution ou rétro-ingénierie non autoris
             ctx.fillStyle = gradient;
             ctx.fillRect(0, 0, width, height);
 
-            // Couche 2 : Photo de l'enfant
+            // Couche 2 : Photo de l'enfant avec Filtre POLAROID VINTAGE
             ctx.save();
             ctx.translate(width / 2, height / 2 - 100); 
-            // INCLINAISON EXACTE DEMANDÉE : 7 degrés dans le SENS HORLOGIQUE (positif)
             ctx.rotate(7 * Math.PI / 180); 
             ctx.translate(imgPosX, imgPosY);
             ctx.scale(imgScale, imgScale);
+            
+            // ---> APPLICATION DU FILTRE VINTAGE / POLAROID UNIQUEMENT ICI <---
+            // Contraste élevé, légère teinte sépia, saturation boostée et très léger flou
+            ctx.filter = 'contrast(1.1) sepia(0.3) saturate(1.2) brightness(0.95) blur(0.5px)';
+            
             ctx.drawImage(userImage, -userImage.width / 2, -userImage.height / 2);
             ctx.restore();
 
-            // Couche 3 : Cadre Polaroïd PNG (inviolable par-dessus la photo)
+            // Couche 3 : Cadre Polaroïd PNG
             if (frameImage.complete && frameImage.naturalHeight !== 0) {
                 ctx.drawImage(frameImage, 0, 0, width, height);
             }
@@ -337,13 +339,14 @@ Toute reproduction, modification, distribution ou rétro-ingénierie non autoris
                 const phrases = currentMode === 'fille' ? phrasesFilles : phrasesGarcons;
                 const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
                 
-                ctx.font = "80px Caveat";
+                // Forcer explicitement la police manuscrite Caveat
+                ctx.font = "bold 90px 'Caveat', cursive";
                 ctx.fillStyle = "#1a1a1a";
                 ctx.textAlign = "center";
                 ctx.textBaseline = "middle";
                 
-                // Remplissage dynamique sur le bas du Polaroïd
-                wrapText(ctx, randomPhrase, width / 2, height - 250, width - 150, 90);
+                // Remplissage dynamique sur le bas de l'image (Y remonté de -250 à -380 par rapport à l'ancien code)
+                wrapText(ctx, randomPhrase, width / 2, height - 380, width - 150, 95);
             }
         }
 
@@ -375,8 +378,6 @@ Toute reproduction, modification, distribution ou rétro-ingénierie non autoris
 
         // === VALIDATION FINALE & EXPORT ===
         function generateFinal() {
-            document.getElementById('guide-overlay').style.display = 'none';
-            
             const renderCanvas = document.getElementById('render-canvas');
             const ctx = renderCanvas.getContext('2d');
             
