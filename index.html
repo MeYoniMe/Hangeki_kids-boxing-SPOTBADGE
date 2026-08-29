@@ -22,13 +22,13 @@ Toute reproduction, modification, distribution ou rétro-ingénierie non autoris
             --text-dark: #2c3e50;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg-gradient); color: var(--text-dark); min-height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-gradient); color: var(--text-dark); min-height: 100vh; min-height: 100dvh; overflow: hidden; display: flex; flex-direction: column; }
         
         /* === ASTUCE POUR FORCER LE CHARGEMENT DE LA POLICE MANUSCRITE === */
         .preload-font { font-family: 'Caveat', cursive; position: absolute; opacity: 0; pointer-events: none; z-index: -1; }
 
         /* === SCREENS === */
-        .screen { display: none; flex-direction: column; align-items: center; justify-content: center; width: 100vw; height: 100vh; padding: 20px; position: absolute; top: 0; left: 0; }
+        .screen { display: none; flex-direction: column; align-items: center; justify-content: center; width: 100vw; height: 100vh; height: 100dvh; padding: 20px; padding-bottom: 50px; position: absolute; top: 0; left: 0; }
         .screen.active { display: flex; animation: fadeIn 0.4s ease forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -84,7 +84,7 @@ Toute reproduction, modification, distribution ou rétro-ingénierie non autoris
         /* === TOUCH LAYER === */
         #touch-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 20; touch-action: none; }
         
-        .controls { width: 100%; max-width: 400px; margin-top: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 30; }
+        .controls { width: 100%; max-width: 400px; margin-top: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 30; margin-bottom: 30px; }
 
         /* === HIDDEN ELEMENTS === */
         #file-input { display: none; }
@@ -106,8 +106,8 @@ Toute reproduction, modification, distribution ou rétro-ingénierie non autoris
         </div>
 
         <div class="btn-container">
-            <button class="btn btn-fille" onclick="triggerFileSelect('fille')">🌸 Photo de ma guerrière</button>
-            <button class="btn btn-garcon" onclick="triggerFileSelect('garcon')">⚡ Photo de mon guerrier</button>
+            <button class="btn btn-fille" onclick="triggerFileSelect('fille')">📷 Prendre en photo ma guerrière</button>
+            <button class="btn btn-garcon" onclick="triggerFileSelect('garcon')">📷 Prendre en photo mon guerrier</button>
         </div>
         
         <!-- Avertissement de sécurité déplacé en bas et rendu discret -->
@@ -323,8 +323,8 @@ Toute reproduction, modification, distribution ou rétro-ingénierie non autoris
             ctx.scale(imgScale, imgScale);
             
             // ---> APPLICATION DU FILTRE VINTAGE / POLAROID UNIQUEMENT ICI <---
-            // Contraste élevé, légère teinte sépia, saturation boostée et très léger flou
-            ctx.filter = 'contrast(1.1) sepia(0.3) saturate(1.2) brightness(0.95) blur(0.5px)';
+            // Effet accentué : plus de sépia, plus de contraste et flou renforcé (1.5px) pour être bien visible
+            ctx.filter = 'contrast(1.2) sepia(0.4) saturate(1.2) brightness(0.9) blur(1.5px)';
             
             ctx.drawImage(userImage, -userImage.width / 2, -userImage.height / 2);
             ctx.restore();
