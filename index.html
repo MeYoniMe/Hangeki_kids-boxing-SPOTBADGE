@@ -34,6 +34,25 @@ Toute reproduction, modification, distribution ou rétro-ingénierie non autoris
         .screen.active { display: flex; animation: fadeIn 0.4s ease forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* === ANIMATIONS D'ATTENTION === */
+        @keyframes pulseAttention {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.04); }
+        }
+        .pulse-btn {
+            animation: pulseAttention 2s infinite ease-in-out;
+        }
+        
+        @keyframes bounceText {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+        .bounce-text {
+            animation: bounceText 1.5s infinite ease-in-out;
+            color: #d35400; /* Orange/Rouge pour attirer l'oeil */
+            opacity: 1 !important;
+        }
+
         /* Screen 2 & 3 spécifiques : On réduit le padding pour maximiser l'image et on utilise flex-start pour remonter les boutons */
         #screen-edit, #screen-result { padding: 10px; padding-top: 20px; justify-content: flex-start; }
 
@@ -114,8 +133,8 @@ Toute reproduction, modification, distribution ou rétro-ingénierie non autoris
         </div>
 
         <div class="btn-container">
-            <button class="btn btn-fille" onclick="triggerFileSelect('fille')">📷 Prendre en photo ma guerrière</button>
-            <button class="btn btn-garcon" onclick="triggerFileSelect('garcon')">📷 Prendre en photo mon guerrier</button>
+            <button class="btn btn-fille pulse-btn" onclick="triggerFileSelect('fille')">📷 Prendre en photo ma guerrière</button>
+            <button class="btn btn-garcon pulse-btn" onclick="triggerFileSelect('garcon')">📷 Prendre en photo mon guerrier</button>
         </div>
         
         <div class="privacy-discreet">
@@ -128,8 +147,8 @@ Toute reproduction, modification, distribution ou rétro-ingénierie non autoris
 
     <!-- SCREEN 2: AJUSTEMENT -->
     <div id="screen-edit" class="screen">
-        <p style="text-align: center; font-size: 13px; font-weight: 800; color: #2c3e50; margin-bottom: 8px; opacity: 0.8;">
-            Pincez pour zoomer / Glissez pour déplacer
+        <p class="bounce-text" style="text-align: center; font-size: 14px; font-weight: 800; margin-bottom: 8px;">
+            👆 Pincez pour zoomer / Glissez pour déplacer
         </p>
         <div class="editor-container">
             <canvas id="canvas-preview"></canvas>
@@ -149,7 +168,9 @@ Toute reproduction, modification, distribution ou rétro-ingénierie non autoris
         </div>
         <div class="controls">
             <a id="download-link" class="btn-primary" style="text-decoration: none;">💾 Enregistrer dans mes Photos</a>
-            <p style="font-size: 11px; text-align: center; opacity: 0.6; margin-top: 5px; font-weight: 600;">(Sur iPhone, maintenez le doigt sur la photo pour l'enregistrer)</p>
+            <p style="font-size: 13px; text-align: center; color: #2c3e50; background: rgba(255,255,255,0.9); padding: 12px; border-radius: 10px; margin-top: 10px; font-weight: 800; border: 2px dashed #2c3e50; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                ⚠️ IMPORTANT IPHONE :<br>Maintenez votre doigt enfoncé sur la photo ci-dessus puis choisissez "Enregistrer dans Photos".
+            </p>
         </div>
     </div>
 
@@ -341,26 +362,33 @@ Toute reproduction, modification, distribution ou rétro-ingénierie non autoris
                 ctx.textBaseline = "middle";
                 
                 // --- POSITION AJUSTÉE ---
-                // Descendu de -380 à -150 pour être bien placé en bas
-                wrapText(ctx, randomPhrase, width / 2, height - 150, width - 150, 95);
+                // Le texte est maintenant centré verticalement autour de cette position Y (height - 170)
+                wrapText(ctx, randomPhrase, width / 2, height - 170, width - 150, 95);
             }
         }
 
         function wrapText(context, text, x, y, maxWidth, lineHeight) {
             const words = text.split(' ');
+            let lines = [];
             let line = '';
             for(let n = 0; n < words.length; n++) {
                 const testLine = line + words[n] + ' ';
                 const metrics = context.measureText(testLine);
                 if (metrics.width > maxWidth && n > 0) {
-                    context.fillText(line.trim(), x, y);
+                    lines.push(line.trim());
                     line = words[n] + ' ';
-                    y += lineHeight;
                 } else {
                     line = testLine;
                 }
             }
-            context.fillText(line.trim(), x, y);
+            lines.push(line.trim());
+
+            // Calcul magique : on centre tout le bloc de texte verticalement autour du point Y
+            let startY = y - ((lines.length - 1) * lineHeight) / 2;
+            
+            for(let i = 0; i < lines.length; i++) {
+                context.fillText(lines[i], x, startY + (i * lineHeight));
+            }
         }
 
         function renderPreview() {
