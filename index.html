@@ -362,8 +362,9 @@ Toute reproduction, modification, distribution ou rétro-ingénierie non autoris
                 ctx.textBaseline = "middle";
                 
                 // --- POSITION AJUSTÉE ---
-                // Le texte est maintenant centré verticalement autour de cette position Y (height - 170)
-                wrapText(ctx, randomPhrase, width / 2, height - 170, width - 150, 95);
+                // Le texte est maintenant centré verticalement autour de cette position Y
+                // On passe de 170 à 215 pour remonter d'une demi-ligne
+                wrapText(ctx, randomPhrase, width / 2, height - 215, width - 150, 95);
             }
         }
 
