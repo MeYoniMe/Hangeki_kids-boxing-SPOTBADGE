@@ -85,8 +85,8 @@
             transform: rotate(-1.5deg); box-shadow: 2px 2px 0px var(--dark); margin-top: 5px;
         }
 
-        /* === PAGE 2 & 3 : L'ÉDITEUR === */
-        #screen-edit, #screen-result { padding: 0; justify-content: flex-start; }
+        /* === PAGE 2 : ÉDITEUR (Photo Plein Écran sans marges blanches) === */
+        #screen-edit { padding: 0; justify-content: flex-start; }
 
         .info-badge {
             position: absolute; top: 12px; left: 50%; transform: translateX(-50%); z-index: 50;
@@ -96,22 +96,21 @@
         }
         @keyframes pulseBadge { 0% { transform: translateX(-50%) scale(1); } 50% { transform: translateX(-50%) scale(1.05); } 100% { transform: translateX(-50%) scale(1); } }
 
-        /* LE SECRET : La zone prend 100% de la largeur, aucune bande blanche ! */
         .editor-wrapper {
             width: 100vw; height: calc(100vw * 16 / 9); max-width: 500px; max-height: calc(500px * 16 / 9);
             position: relative; flex-shrink: 0; 
         }
 
-        #canvas-preview, #final-image, #touch-layer {
+        #canvas-preview, #touch-layer {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
         }
         #touch-layer { z-index: 20; touch-action: none; }
 
-        /* LE FOOTER FIXE : Impossible à cacher, reste toujours en bas ! */
+        /* LE FOOTER FIXE */
         .controls-footer {
             position: absolute; bottom: 0; left: 0; width: 100%; z-index: 100;
             display: flex; flex-direction: row; gap: 10px;
-            padding: 12px 15px calc(12px + env(safe-area-inset-bottom)); /* Gère la barre iPhone */
+            padding: 12px 15px calc(12px + env(safe-area-inset-bottom)); 
             background: var(--cream); border-top: var(--border-thick);
         }
 
@@ -119,11 +118,32 @@
         .btn-text { flex: 1; background: var(--yellow); color: var(--dark); }
         .btn-success { flex: 1; background: var(--green); color: var(--dark); text-decoration: none; }
 
+        /* === PAGE 3 : RÉSULTAT FINAL (PREVIEW CARD) === */
+        #screen-result { padding: 0; justify-content: center; }
+
+        .result-wrapper {
+            width: 100%;
+            height: calc(100% - 135px); /* Laisse exactement la place au bandeau du bas */
+            display: flex; align-items: center; justify-content: center;
+            padding: 20px; /* Conserve une marge autour de l'image pour l'élégance */
+        }
+
+        #final-image {
+            max-width: 100%; max-height: 100%;
+            object-fit: contain; /* S'assure que la photo ne déborde jamais */
+            border: var(--border-thick); border-radius: 8px;
+            box-shadow: 8px 8px 0px rgba(0,0,0,0.15); /* Magnifique ombre de présentation */
+        }
+
+        .footer-result {
+            flex-direction: column; /* Superpose l'avertissement et le bouton proprement */
+            padding-top: 15px; gap: 12px;
+        }
+
         .ios-alert-box {
-            position: absolute; bottom: 85px; left: 50%; transform: translateX(-50%); z-index: 90;
-            background: #fff; border: var(--border-thick); border-radius: var(--radius-modern);
-            padding: 10px 14px; width: 90%; max-width: 350px;
-            box-shadow: var(--shadow-hard); text-align: center; font-size: 11px; font-weight: 800; color: var(--dark);
+            background: #fff; border: 2px solid var(--dark); border-radius: 8px;
+            padding: 10px 15px; width: 100%; text-align: center; font-size: 11px; font-weight: 800; color: var(--dark);
+            box-shadow: 2px 2px 0px var(--dark);
         }
 
         #file-input, #render-canvas { display: none; }
@@ -165,7 +185,7 @@
         <input type="file" id="file-input" accept="image/*">
     </div>
 
-    <!-- SCREEN 2: AJUSTEMENT -->
+    <!-- SCREEN 2: AJUSTEMENT (Image 100% sans bordures) -->
     <div id="screen-edit" class="screen">
         <div class="info-badge">👉 PINCEZ POUR ZOOMER / GLISSEZ</div>
         
@@ -174,25 +194,24 @@
             <div id="touch-layer"></div>
         </div>
 
-        <!-- LE FOOTER FIXE -->
         <div class="controls-footer">
             <button class="btn btn-action btn-icon" onclick="resetApp()">🔄</button>
             <button class="btn btn-text" onclick="generateFinal()">✨ VALIDER LA PHOTO</button>
         </div>
     </div>
 
-    <!-- SCREEN 3: RÉSULTAT FINAL -->
+    <!-- SCREEN 3: RÉSULTAT FINAL (Mode Preview Card propre) -->
     <div id="screen-result" class="screen">
-        <div class="ios-alert-box">
-            ⚠️ SUR IPHONE : Maintenez le doigt sur la photo pour l'enregistrer dans vos photos.
-        </div>
-        
-        <div class="editor-wrapper">
+        <div class="result-wrapper">
             <img id="final-image" alt="Diplôme Hangeki">
         </div>
         
-        <div class="controls-footer">
-            <a id="download-link" class="btn btn-success">💾 ENREGISTRER DANS L'ALBUM</a>
+        <!-- Footer vertical spécifique à la fin -->
+        <div class="controls-footer footer-result">
+            <div class="ios-alert-box">
+                ⚠️ SUR IPHONE : Maintenez le doigt sur la photo pour l'enregistrer dans l'album.
+            </div>
+            <a id="download-link" class="btn btn-success" style="text-decoration: none; text-align: center;">💾 ENREGISTRER DANS L'ALBUM</a>
         </div>
     </div>
 
