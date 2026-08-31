@@ -72,7 +72,7 @@
             to { opacity: 1; transform: scale(1) translateY(0); } 
         }
 
-        /* Screen 2 & 3 spécifiques */
+        /* Screen 2 & 3 spécifiques (Prend toute la largeur) */
         #screen-edit, #screen-result { padding: 0; padding-top: 45px; justify-content: flex-start; }
 
         /* === HEADER === */
@@ -173,6 +173,7 @@
         }
 
         /* === EDITOR === */
+        /* Largeur max (100vw) pour effacer les bandes blanches sur les côtés */
         .editor-container { 
             position: relative; width: 100vw; max-width: 600px; aspect-ratio: 9/16; 
             background: #fff; 
