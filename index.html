@@ -1,3 +1,8 @@
+<!--
+Copyright (c) 2026 Bressard Yoni. All Rights Reserved. Tous droits réservés.
+Ce code source et son architecture logicielle sont la propriété exclusive de Bressard Yoni.
+Toute reproduction, modification, distribution ou rétro-ingénierie non autorisée est strictement interdite.
+-->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -15,7 +20,545 @@
             --blue: #0066FF;
             --green: #00F090;
             --dark: #121212;
+            <!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Diplôme Officiel - B.C Han-Geki</title>
+    <!-- Nouvelles Polices Néo-Brutalistes + Caveat -->
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@500;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        /* === VARIABLES NEO-BRUTALISM === */
+        :root {
+            --cream: #FDFBF7;
+            --yellow: #FFE600;
+            --red: #FF3B30;
+            --blue: #0066FF;
+            --green: #00F090;
+            --dark: #121212;
             
+            --border-thick: 3px solid var(--dark);
+            --shadow-hard: 4px 4px 0px var(--dark);
+            --shadow-pressed: 1px 1px 0px var(--dark);
+            --radius-modern: 14px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
+        
+        /* 100dvh est crucial pour Safari iOS */
+        body { 
+            font-family: 'Outfit', sans-serif; 
+            background-color: var(--cream);
+            color: var(--dark); 
+            min-height: 100dvh; 
+            overflow: hidden; 
+            display: flex; flex-direction: column; 
+            /* Trame de points Halftone (opacité 6%) */
+            background-image: radial-gradient(rgba(18,18,18,0.06) 1.5px, transparent 1.5px);
+            background-size: 14px 14px;
+        }
+        
+        /* Préchargement de la police manuscrite */
+        .preload-font { font-family: 'Caveat', cursive; position: absolute; opacity: 0; pointer-events: none; z-index: -1; }
+
+        /* === MARQUEE (Bandeau déroulant) === */
+        .marquee {
+            position: absolute; top: 0; left: 0; width: 100%;
+            background-color: var(--yellow);
+            border-bottom: var(--border-thick);
+            overflow: hidden; white-space: nowrap; z-index: 100;
+            padding: 5px 0;
+            display: flex; align-items: center;
+        }
+        .marquee-track {
+            display: flex; width: max-content;
+            animation: scroll-marquee 12s linear infinite;
+        }
+        .marquee span {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 20px; letter-spacing: 1.5px;
+            color: var(--dark); padding: 0 15px;
+        }
+        @keyframes scroll-marquee { 
+            0% { transform: translateX(0); } 
+            100% { transform: translateX(-50%); } 
+        }
+
+        /* === SCREENS === */
+        .screen { display: none; flex-direction: column; align-items: center; justify-content: center; width: 100vw; height: 100dvh; padding: 20px; padding-top: 45px; position: absolute; top: 0; left: 0; }
+        .screen.active { display: flex; animation: brutalPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+        
+        @keyframes brutalPop { 
+            from { opacity: 0; transform: scale(0.95) translateY(10px); } 
+            to { opacity: 1; transform: scale(1) translateY(0); } 
+        }
+
+        /* Screen 2 & 3 spécifiques */
+        #screen-edit, #screen-result { padding: 0; padding-top: 45px; justify-content: flex-start; }
+
+        /* === HEADER === */
+        .header-copyright {
+            position: absolute; top: 15px; left: 20px;
+            font-size: 10px; font-weight: 800; color: rgba(18,18,18,0.5);
+            z-index: 100;
+        }
+
+        /* === BADGES & STICKERS (Asymétrie) === */
+        .sticker {
+            position: absolute;
+            background: var(--green);
+            color: var(--dark);
+            border: 2px solid var(--dark);
+            border-radius: 8px;
+            padding: 4px 10px;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 16px; letter-spacing: 1px;
+            box-shadow: 2px 2px 0px var(--dark);
+            z-index: 10;
+        }
+        .sticker-red { background: var(--red); color: #fff; transform: rotate(-3deg); top: -12px; right: -10px; }
+        .sticker-blue { background: var(--blue); color: #fff; transform: rotate(2deg); bottom: -15px; left: -10px; border-radius: 50px; padding: 6px 12px;}
+
+        /* === ACCROCHE (Brutal Card) === */
+        .accroche-card { 
+            background: #fff;
+            border: var(--border-thick);
+            border-radius: var(--radius-modern);
+            box-shadow: var(--shadow-hard);
+            padding: 25px 20px;
+            margin-bottom: 45px;
+            position: relative;
+            text-align: center;
+        }
+        .accroche-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 36px;
+            line-height: 1.1;
+            color: var(--dark);
+            letter-spacing: 0.5px;
+        }
+        .accroche-subtitle {
+            font-family: 'Outfit', sans-serif;
+            font-size: 15px; font-weight: 700;
+            margin-top: 8px; color: #444;
+        }
+
+        /* === BUTTONS (Écrasement mécanique) === */
+        .btn-container { width: 100%; max-width: 350px; display: flex; flex-direction: column; gap: 20px; margin-bottom: 30px; }
+        
+        .btn {
+            width: 100%; padding: 18px; 
+            border: var(--border-thick);
+            border-radius: var(--radius-modern);
+            box-shadow: var(--shadow-hard);
+            font-family: 'Outfit', sans-serif;
+            font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            cursor: pointer; position: relative;
+            transition: transform 0.1s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.1s;
+        }
+        .btn:active { 
+            transform: translate(3px, 3px); 
+            box-shadow: var(--shadow-pressed); 
+        }
+        
+        .btn-fille { background: var(--red); color: #fff; }
+        .btn-garcon { background: var(--blue); color: #fff; }
+        
+        .btn-action { background: #fff; color: var(--dark); margin-bottom: 15px;}
+        .btn-primary { background: var(--yellow); color: var(--dark); width: 100%; }
+        .btn-success { background: var(--green); color: var(--dark); width: 100%; }
+
+        /* === PRIVACY DISCREET === */
+        .privacy-card {
+            background: #fff;
+            border: 2px solid var(--dark);
+            border-radius: 10px;
+            padding: 10px 15px;
+            font-size: 11px; font-weight: 700; color: var(--dark);
+            text-align: center; line-height: 1.3;
+            transform: rotate(-1deg);
+            box-shadow: 2px 2px 0px var(--dark);
+            position: absolute; bottom: 25px;
+        }
+        
+        .info-badge {
+            background: #fff;
+            border: 2px solid var(--dark);
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 12px; font-weight: 800; color: var(--dark);
+            text-align: center; margin-bottom: 12px;
+            box-shadow: 2px 2px 0px var(--dark);
+            display: inline-block;
+        }
+
+        /* === EDITOR === */
+        .editor-container { 
+            position: relative; width: 100vw; max-width: 600px; aspect-ratio: 9/16; 
+            background: #fff; 
+            border-top: var(--border-thick); 
+            border-bottom: var(--border-thick); 
+            overflow: hidden; 
+            margin: 0 auto; flex-shrink: 1; 
+        }
+        #canvas-preview { width: 100%; height: 100%; object-fit: contain; }
+
+        /* === TOUCH LAYER === */
+        #touch-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 20; touch-action: none; }
+        
+        .controls { width: 100%; max-width: 400px; margin: 20px auto 25px auto; display: flex; flex-direction: column; z-index: 30; padding: 0 20px; }
+
+        /* === HIDDEN ELEMENTS === */
+        #file-input { display: none; }
+        #render-canvas { display: none; }
+    </style>
+</head>
+<body>
+    
+    <!-- Préchargement invisible -->
+    <div class="preload-font">Préchargement de la police manuscrite</div>
+
+    <!-- BANDEAU MARQUEE -->
+    <div class="marquee">
+        <div class="marquee-track">
+            <span>TEAM 2026/2027 • FORCE & RESPECT •</span>
+            <span>TEAM 2026/2027 • FORCE & RESPECT •</span>
+            <span>TEAM 2026/2027 • FORCE & RESPECT •</span>
+            <span>TEAM 2026/2027 • FORCE & RESPECT •</span>
+        </div>
+    </div>
+
+    <!-- SCREEN 1: ACCUEIL -->
+    <div id="screen-home" class="screen active">
+        
+        <!-- Copyright Yoni Brd -->
+        <div class="header-copyright">© Copyright Yoni Brd</div>
+
+        <div class="accroche-card">
+            <div class="sticker sticker-red">🔥 TEAM HANGEKI</div>
+            <div class="accroche-title">METS-TOI EN GARDE<br>CHAMPION(NE) !</div>
+            <div class="accroche-subtitle">Gants bien hauts au niveau des joues,<br>et regarde l’objectif !</div>
+        </div>
+
+        <div class="btn-container">
+            <button class="btn btn-fille" onclick="triggerFileSelect('fille')">📷 PHOTO DE MA GUERRIÈRE</button>
+            <button class="btn btn-garcon" onclick="triggerFileSelect('garcon')">📷 PHOTO DE MON GUERRIER</button>
+        </div>
+        
+        <div class="privacy-card">
+            🔒 100% PRIVÉ & LOCAL<br>
+            <span style="font-size:9.5px; opacity:0.8;">Aucune donnée collectée. Vous gérez votre photo.</span>
+        </div>
+        
+        <input type="file" id="file-input" accept="image/*">
+    </div>
+
+    <!-- SCREEN 2: AJUSTEMENT -->
+    <div id="screen-edit" class="screen">
+        <div style="text-align: center; width: 100%;">
+            <div class="info-badge">🤏 PINCEZ POUR ZOOMER / GLISSEZ</div>
+        </div>
+        
+        <div class="editor-container">
+            <canvas id="canvas-preview"></canvas>
+            <div id="touch-layer"></div>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-action" onclick="resetApp()">🔄 CHANGER DE PHOTO</button>
+            <button class="btn btn-primary" onclick="generateFinal()">✨ VALIDATION TEAM HANGEKI</button>
+        </div>
+    </div>
+
+    <!-- SCREEN 3: RÉSULTAT FINAL -->
+    <div id="screen-result" class="screen">
+        <div class="editor-container">
+            <img id="final-image" style="width: 100%; height: 100%; object-fit: contain;" alt="Diplôme Hangeki">
+        </div>
+        
+        <div class="controls" style="margin-top: 15px;">
+            <div style="position: relative;">
+                <div class="sticker sticker-blue">💾 100% HD</div>
+                <a id="download-link" class="btn btn-success" style="text-decoration: none;">ENREGISTRER LA PHOTO</a>
+            </div>
+            
+            <div class="info-badge" style="margin-top: 15px; background: var(--yellow);">
+                ⚠️ SUR IPHONE : MAINTENEZ LE DOIGT SUR LA PHOTO POUR L'ENREGISTRER
+            </div>
+        </div>
+    </div>
+
+    <!-- Canvas caché pour le rendu final HD (1080x1920) -->
+    <canvas id="render-canvas" width="1080" height="1920"></canvas>
+
+    <script>
+        const phrasesFilles = [
+            "Chaque entraînement construit la confiance, le respect et le caractère.",
+            "On vient apprendre un sport, on repart avec des valeurs pour la vie.",
+            "Chaque effort nous rend plus fort, chaque entraînement nous fait grandir.",
+            "Apprendre, progresser, respecter… et devenir chaque jour une meilleure version de soi-même.",
+            "L’entraînement apprend à persévérer quand les choses deviennent difficiles.",
+            "Chaque entraînement est une nouvelle occasion de prendre confiance en soi.",
+            "Le sport apprend à gagner avec humilité et à progresser avec respect.",
+            "À chaque séance, le corps progresse et le caractère se construit.",
+            "Chaque entraînement est un petit pas vers la personne que l’on deviendra.",
+            "S’entraîner, c’est apprendre l’effort, le respect et la persévérance.",
+            "On apprend à tomber, à se relever et à continuer d’avancer.",
+            "À l’entraînement, chaque progrès mérite d’être une fierté.",
+            "Chaque séance apporte une nouvelle leçon, chaque leçon nous fait grandir.",
+            "L’entraînement donne la force d’essayer, la confiance de continuer et le respect des autres.",
+            "Plus qu’un entraînement : une leçon de courage, de respect et de confiance.",
+            "Apprendre à être fort, mais surtout apprendre à être meilleur.",
+            "Chaque effort accompli aujourd’hui construit la confiance de demain.",
+            "À force de s’entraîner, on découvre une force que l’on ne soupçonnait pas.",
+            "Le plus beau résultat d’un entraînement, c’est ce que l’on devient.",
+            "Chaque séance apprend la discipline, nourrit la confiance et fait grandir.",
+            "Le sport apprend à respecter son partenaire, à croire en soi et à ne jamais abandonner.",
+            "Petit à petit, l’entraînement transforme l’effort en confiance et les défis en fierté.",
+            "Aujourd’hui on apprend les gestes. Demain, on gardera les valeurs."
+        ];
+
+        const phrasesGarcons = [
+            "Chaque entraînement construit la confiance, le respect et le caractère.",
+            "On vient apprendre un sport, on repart avec des valeurs pour la vie.",
+            "Chaque effort nous rend plus fort, chaque entraînement nous fait grandir.",
+            "Apprendre, progresser, respecter… et devenir chaque jour une meilleure version de soi-même.",
+            "L’entraînement apprend à persévérer quand les choses deviennent difficiles.",
+            "Chaque entraînement est une nouvelle occasion de prendre confiance en soi.",
+            "Le sport apprend à gagner avec humilité et à progresser avec respect.",
+            "À chaque séance, le corps progresse et le caractère se construit.",
+            "Chaque entraînement est un petit pas vers la personne que l’on deviendra.",
+            "S’entraîner, c’est apprendre l’effort, le respect et la persévérance.",
+            "On apprend à tomber, à se relever et à continuer d’avancer.",
+            "À l’entraînement, chaque progrès mérite d’être une fierté.",
+            "Chaque séance apporte une nouvelle leçon, chaque leçon nous fait grandir.",
+            "L’entraînement donne la force d’essayer, la confiance de continuer et le respect des autres.",
+            "Plus qu’un entraînement : une leçon de courage, de respect et de confiance.",
+            "Apprendre à être fort, mais surtout apprendre à être meilleur.",
+            "Chaque effort accompli aujourd’hui construit la confiance de demain.",
+            "À force de s’entraîner, on découvre une force que l’on ne soupçonnait pas.",
+            "Le plus beau résultat d’un entraînement, c’est ce que l’on devient.",
+            "Chaque séance apprend la discipline, nourrit la confiance et fait grandir.",
+            "Le sport apprend à respecter son partenaire, à croire en soi et à ne jamais abandonner.",
+            "Petit à petit, l’entraînement transforme l’effort en confiance et les défis en fierté.",
+            "Aujourd’hui on apprend les gestes. Demain, on gardera les valeurs."
+        ];
+
+        let currentMode = 'fille'; 
+        let userImage = new Image();
+        let frameImage = new Image();
+        
+        let imgScale = 1;
+        let imgPosX = 0;
+        let imgPosY = 0;
+        
+        const CANVAS_WIDTH = 1080;
+        const CANVAS_HEIGHT = 1920;
+
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function resetApp() {
+            document.getElementById('file-input').value = '';
+            showScreen('screen-home');
+        }
+
+        function triggerFileSelect(mode) {
+            currentMode = mode;
+            frameImage.src = mode === 'fille' ? 'cadre_fille.png' : 'cadre_garcon.png';
+            document.getElementById('file-input').click();
+        }
+
+        document.getElementById('file-input').addEventListener('change', function(e) {
+            if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    userImage.onload = function() {
+                        initEditor();
+                    }
+                    userImage.src = event.target.result;
+                }
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+
+        function initEditor() {
+            const scaleX = CANVAS_WIDTH / userImage.width;
+            const scaleY = CANVAS_HEIGHT / userImage.height;
+            imgScale = Math.max(scaleX, scaleY) * 1.1; 
+            imgPosX = 0;
+            imgPosY = 0;
+
+            showScreen('screen-edit');
+            renderPreview();
+        }
+
+        const touchLayer = document.getElementById('touch-layer');
+        let isDragging = false;
+        let startDistance = 0;
+        let initialScale = 1;
+        let startX = 0, startY = 0;
+        let initPosX = 0, initPosY = 0;
+
+        function getDistance(touches) {
+            return Math.hypot(touches[0].clientX - touches[1].clientX, touches[0].clientY - touches[1].clientY);
+        }
+
+        touchLayer.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            if (e.touches.length === 1) {
+                isDragging = true;
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+                initPosX = imgPosX;
+                initPosY = imgPosY;
+            } else if (e.touches.length === 2) {
+                isDragging = false;
+                startDistance = getDistance(e.touches);
+                initialScale = imgScale;
+            }
+        }, {passive: false});
+
+        touchLayer.addEventListener('touchmove', function(e) {
+            e.preventDefault();
+            if (e.touches.length === 1 && isDragging) {
+                const dx = (e.touches[0].clientX - startX) * 3; 
+                const dy = (e.touches[0].clientY - startY) * 3;
+                imgPosX = initPosX + dx;
+                imgPosY = initPosY + dy;
+                renderPreview();
+            } else if (e.touches.length === 2) {
+                const currentDistance = getDistance(e.touches);
+                imgScale = initialScale * (currentDistance / startDistance);
+                renderPreview();
+            }
+        }, {passive: false});
+
+        touchLayer.addEventListener('touchend', function(e) {
+            if (e.touches.length < 2) startDistance = 0;
+            if (e.touches.length === 0) isDragging = false;
+        });
+
+        function drawScene(ctx, width, height, withText = false) {
+            // Couche 1 : Fond dégradé
+            const gradient = ctx.createLinearGradient(0, 0, width, height);
+            if (currentMode === 'fille') {
+                gradient.addColorStop(0, '#FFF9E6'); gradient.addColorStop(1, '#FFD1DC');
+            } else {
+                gradient.addColorStop(0, '#FFF9E6'); gradient.addColorStop(1, '#D0E8FF');
+            }
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, width, height);
+
+            // Couche 2 : Photo de l'enfant avec Filtre Vintage FORT
+            ctx.save();
+            ctx.translate(width / 2, height / 2 - 100); 
+            ctx.rotate(7 * Math.PI / 180); 
+            ctx.translate(imgPosX, imgPosY);
+            ctx.scale(imgScale, imgScale);
+            
+            // --- LE FILTRE POLAROID ACCENTUÉ ---
+            // contrast: booste les ombres | sepia: jaunit | saturate: ravive les couleurs | brightness: assombrit un peu
+            ctx.filter = 'contrast(1.3) sepia(0.6) saturate(1.4) brightness(0.9)';
+            
+            ctx.drawImage(userImage, -userImage.width / 2, -userImage.height / 2);
+            ctx.restore(); // Annule le filtre pour que le cadre et le texte ne soient pas impactés
+
+            // Couche 3 : Cadre Polaroïd PNG
+            if (frameImage.complete && frameImage.naturalHeight !== 0) {
+                ctx.drawImage(frameImage, 0, 0, width, height);
+            }
+
+            // Couche 4 : Texte manuscrit
+            if (withText) {
+                const phrases = currentMode === 'fille' ? phrasesFilles : phrasesGarcons;
+                const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
+                
+                ctx.save();
+                ctx.font = "bold 95px 'Caveat', cursive";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                
+                if (currentMode === 'garcon') {
+                    ctx.fillStyle = "#FFDE59"; // Jaune demandé
+                    // Ajout d'une ombre pour rendre le jaune lisible sur le blanc du polaroïd
+                    ctx.shadowColor = "rgba(0,0,0,0.8)";
+                    ctx.shadowBlur = 5;
+                    ctx.shadowOffsetX = 2;
+                    ctx.shadowOffsetY = 2;
+                } else {
+                    ctx.fillStyle = "#1a1a1a";
+                }
+                
+                // --- POSITION AJUSTÉE ---
+                // Le texte est maintenant centré verticalement autour de cette position Y
+                // On passe de 170 à 215 pour remonter d'une demi-ligne
+                wrapText(ctx, randomPhrase, width / 2, height - 215, width - 150, 95);
+                ctx.restore();
+            }
+        }
+
+        function wrapText(context, text, x, y, maxWidth, lineHeight) {
+            const words = text.split(' ');
+            let lines = [];
+            let line = '';
+            for(let n = 0; n < words.length; n++) {
+                const testLine = line + words[n] + ' ';
+                const metrics = context.measureText(testLine);
+                if (metrics.width > maxWidth && n > 0) {
+                    lines.push(line.trim());
+                    line = words[n] + ' ';
+                } else {
+                    line = testLine;
+                }
+            }
+            lines.push(line.trim());
+
+            // Calcul magique : on centre tout le bloc de texte verticalement autour du point Y
+            let startY = y - ((lines.length - 1) * lineHeight) / 2;
+            
+            for(let i = 0; i < lines.length; i++) {
+                context.fillText(lines[i], x, startY + (i * lineHeight));
+            }
+        }
+
+        function renderPreview() {
+            const previewCanvas = document.getElementById('canvas-preview');
+            previewCanvas.width = CANVAS_WIDTH / 2;
+            previewCanvas.height = CANVAS_HEIGHT / 2;
+            const ctx = previewCanvas.getContext('2d');
+            ctx.scale(0.5, 0.5);
+            drawScene(ctx, CANVAS_WIDTH, CANVAS_HEIGHT, false);
+        }
+
+        function generateFinal() {
+            const renderCanvas = document.getElementById('render-canvas');
+            const ctx = renderCanvas.getContext('2d');
+            
+            drawScene(ctx, CANVAS_WIDTH, CANVAS_HEIGHT, true);
+            const dataUrl = renderCanvas.toDataURL('image/jpeg', 0.95);
+            
+            document.getElementById('final-image').src = dataUrl;
+            
+            const downloadBtn = document.getElementById('download-link');
+            downloadBtn.href = dataUrl;
+            downloadBtn.download = `Diplome-Hangeki-${currentMode}.jpg`;
+            
+            showScreen('screen-result');
+
+            // Verrouillage de sécurité : Empêcher le retour en arrière
+            history.pushState(null, null, location.href);
+            window.onpopstate = function () {
+                history.go(1);
+            };
+        }
+    </script>
+</body>
+</html>
             --border-thick: 3px solid var(--dark);
             --shadow-hard: 4px 4px 0px var(--dark);
             --shadow-pressed: 1px 1px 0px var(--dark);
