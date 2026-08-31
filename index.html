@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Diplôme Officiel - B.C Han-Geki</title>
-    <!-- Nouvelles Polices Néo-Brutalistes + Caveat -->
+    <!-- Polices Néo-Brutalistes + Caveat -->
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@500;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
     <style>
         /* === VARIABLES NEO-BRUTALISM === */
@@ -19,7 +19,7 @@
             --border-thick: 3px solid var(--dark);
             --shadow-hard: 4px 4px 0px var(--dark);
             --shadow-pressed: 1px 1px 0px var(--dark);
-            --radius-modern: 14px;
+            --radius-modern: 12px;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
@@ -29,7 +29,7 @@
             background-color: var(--cream);
             color: var(--dark); 
             height: 100dvh; 
-            overflow: hidden; 
+            overflow: hidden; /* AUCUN SCROLL POSSIBLE */
             display: flex; flex-direction: column; 
             background-image: radial-gradient(rgba(18,18,18,0.06) 1.5px, transparent 1.5px);
             background-size: 14px 14px;
@@ -39,164 +39,98 @@
 
         /* === MARQUEE (Bandeau déroulant) === */
         .marquee {
-            width: 100%;
-            background-color: var(--yellow);
-            border-bottom: var(--border-thick);
-            overflow: hidden; white-space: nowrap; z-index: 100;
-            padding: 6px 0;
-            display: flex; align-items: center;
-            flex-shrink: 0;
+            width: 100%; background-color: var(--yellow); border-bottom: var(--border-thick);
+            overflow: hidden; white-space: nowrap; z-index: 100; padding: 6px 0;
+            display: flex; align-items: center; flex-shrink: 0;
         }
-        .marquee-track {
-            display: flex; width: max-content;
-            animation: scroll-marquee 12s linear infinite;
-        }
-        .marquee span {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 20px; letter-spacing: 1.5px;
-            color: var(--dark); padding: 0 15px;
-        }
+        .marquee-track { display: flex; width: max-content; animation: scroll-marquee 12s linear infinite; }
+        .marquee span { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 1.5px; color: var(--dark); padding: 0 15px; }
         @keyframes scroll-marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-        /* === MAIN CONTAINER & SCREENS === */
-        #app-container {
-            flex: 1;
-            position: relative;
-            width: 100%;
-            overflow: hidden;
-        }
-
+        /* === SCREENS === */
         .screen { 
-            display: none; 
-            flex-direction: column; 
-            align-items: center; 
-            width: 100%; height: 100%; 
-            padding: 20px; 
-            position: absolute; top: 0; left: 0; 
+            display: none; width: 100vw; height: calc(100dvh - 38px); 
+            position: absolute; top: 38px; left: 0; 
+            overflow: hidden; flex-direction: column; align-items: center; 
         }
         .screen.active { display: flex; }
         
         /* === PAGE 1 : ACCUEIL === */
-        #screen-home { 
-            justify-content: center; 
-            gap: 25px; /* Évite les superpositions en espaçant automatiquement */
-        }
+        #screen-home { justify-content: center; padding: 20px; gap: 20px; }
         
-        /* Animations fluides d'entrée (Staggered) */
-        .animate-pop { opacity: 0; animation: brutalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
-        .delay-1 { animation-delay: 0.1s; }
-        .delay-2 { animation-delay: 0.2s; }
-        .delay-3 { animation-delay: 0.3s; }
-
-        @keyframes brutalPop { 
-            from { opacity: 0; transform: scale(0.95) translateY(15px); } 
-            to { opacity: 1; transform: scale(1) translateY(0); } 
-        }
-
-        .header-copyright {
-            position: absolute; top: 10px; left: 20px;
-            font-size: 11px; font-weight: 800; color: rgba(18,18,18,0.5);
-            z-index: 100;
-        }
+        .header-copyright { position: absolute; top: 10px; left: 20px; font-size: 11px; font-weight: 800; color: rgba(18,18,18,0.5); z-index: 100; }
 
         .accroche-card { 
             background: #fff; border: var(--border-thick); border-radius: var(--radius-modern); box-shadow: var(--shadow-hard);
             padding: 25px 20px; width: 100%; max-width: 350px; text-align: center;
         }
         .accroche-title { font-family: 'Bebas Neue', sans-serif; font-size: 34px; line-height: 1.1; color: var(--dark); letter-spacing: 0.5px; }
-        .accroche-subtitle { font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 700; margin-top: 10px; color: #444; }
+        .accroche-subtitle { font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 700; margin-top: 10px; color: #444; }
 
-        /* === BUTTONS === */
         .btn-container { width: 100%; max-width: 350px; display: flex; flex-direction: column; gap: 15px; }
         
         .btn {
-            width: 100%; padding: 18px; border: var(--border-thick); border-radius: var(--radius-modern);
-            box-shadow: var(--shadow-hard); font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 800; 
+            width: 100%; padding: 16px; border: var(--border-thick); border-radius: var(--radius-modern);
+            box-shadow: var(--shadow-hard); font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 800; 
             text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; justify-content: center; gap: 10px;
-            cursor: pointer; position: relative; transition: transform 0.1s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.1s;
+            cursor: pointer; position: relative; transition: transform 0.1s, box-shadow 0.1s;
         }
         .btn:active { transform: translate(3px, 3px); box-shadow: var(--shadow-pressed); }
         .btn-fille { background: var(--red); color: #fff; }
         .btn-garcon { background: var(--blue); color: #fff; }
-        .btn-action { background: #fff; color: var(--dark); }
-        .btn-primary { background: var(--yellow); color: var(--dark); }
-        .btn-success { background: var(--green); color: var(--dark); }
 
         .privacy-card {
             background: #fff; border: 2px solid var(--dark); border-radius: 10px; padding: 10px 15px;
             font-size: 11px; font-weight: 700; color: var(--dark); text-align: center; line-height: 1.3;
-            transform: rotate(-1.5deg); box-shadow: 2px 2px 0px var(--dark); margin-top: 10px;
+            transform: rotate(-1.5deg); box-shadow: 2px 2px 0px var(--dark); margin-top: 5px;
         }
 
-        /* === PAGE 2 & 3 : EXPERT UI LAYOUT === */
+        /* === PAGE 2 & 3 : L'ÉDITEUR === */
+        #screen-edit, #screen-result { padding: 0; justify-content: flex-start; }
+
         .info-badge {
+            position: absolute; top: 12px; left: 50%; transform: translateX(-50%); z-index: 50;
             background: var(--yellow); border: var(--border-thick); border-radius: 10px; padding: 8px 14px;
-            font-size: 13px; font-weight: 800; color: var(--dark); text-align: center; margin-bottom: 15px;
-            box-shadow: var(--shadow-hard); flex-shrink: 0;
-            animation: pulseBadge 2s infinite;
+            font-size: 12px; font-weight: 800; color: var(--dark); text-align: center;
+            box-shadow: var(--shadow-hard); animation: pulseBadge 2s infinite;
         }
-        @keyframes pulseBadge { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
+        @keyframes pulseBadge { 0% { transform: translateX(-50%) scale(1); } 50% { transform: translateX(-50%) scale(1.05); } 100% { transform: translateX(-50%) scale(1); } }
 
-        /* Le conteneur parent s'adapte à l'espace disponible entre le badge et les boutons */
+        /* LE SECRET : La zone prend 100% de la largeur, aucune bande blanche ! */
         .editor-wrapper {
-            flex: 1;
-            width: 100%;
-            min-height: 0; /* Crucial pour Safari iOS, empêche l'overflow */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 15px;
+            width: 100vw; height: calc(100vw * 16 / 9); max-width: 500px; max-height: calc(500px * 16 / 9);
+            position: relative; flex-shrink: 0; 
         }
 
-        /* Le conteneur magique qui maintient TOUJOURS le ratio 9/16 */
-        .canvas-container {
-            position: relative;
-            height: 100%;
-            max-width: 100%;
-            aspect-ratio: 9 / 16;
-            border-top: var(--border-thick);
-            border-bottom: var(--border-thick);
-            background: transparent;
-            overflow: hidden;
-            border-radius: 2px;
-        }
-
-        /* Le Canvas ET le Touch-Layer ont exactement la même taille que leur parent 9/16 */
         #canvas-preview, #final-image, #touch-layer {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
         }
-
-        #canvas-preview, #final-image { object-fit: contain; }
-        
         #touch-layer { z-index: 20; touch-action: none; }
 
-        .controls { 
-            width: 100%; 
-            max-width: 400px; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 12px; 
-            flex-shrink: 0;
-            padding-bottom: env(safe-area-inset-bottom, 10px); /* Respecte la barre d'accueil iPhone */
+        /* LE FOOTER FIXE : Impossible à cacher, reste toujours en bas ! */
+        .controls-footer {
+            position: absolute; bottom: 0; left: 0; width: 100%; z-index: 100;
+            display: flex; flex-direction: row; gap: 10px;
+            padding: 12px 15px calc(12px + env(safe-area-inset-bottom)); /* Gère la barre iPhone */
+            background: var(--cream); border-top: var(--border-thick);
         }
+
+        .btn-icon { width: 55px; padding: 0; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+        .btn-text { flex: 1; background: var(--yellow); color: var(--dark); }
+        .btn-success { flex: 1; background: var(--green); color: var(--dark); text-decoration: none; }
 
         .ios-alert-box {
+            position: absolute; bottom: 85px; left: 50%; transform: translateX(-50%); z-index: 90;
             background: #fff; border: var(--border-thick); border-radius: var(--radius-modern);
-            padding: 12px 16px; width: 100%;
-            box-shadow: var(--shadow-hard); text-align: center; font-size: 12px; font-weight: 800; color: var(--dark);
+            padding: 10px 14px; width: 90%; max-width: 350px;
+            box-shadow: var(--shadow-hard); text-align: center; font-size: 11px; font-weight: 800; color: var(--dark);
         }
 
-        #file-input { display: none; }
-        #render-canvas { display: none; }
+        #file-input, #render-canvas { display: none; }
     </style>
 </head>
 <body>
     
-    <!-- Préchargement invisible -->
     <div class="preload-font">Préchargement de la police manuscrite</div>
 
     <!-- BANDEAU MARQUEE -->
@@ -209,69 +143,59 @@
         </div>
     </div>
 
-    <!-- MAIN APP WRAPPER -->
-    <div id="app-container">
+    <!-- SCREEN 1: ACCUEIL -->
+    <div id="screen-home" class="screen active">
+        <div class="header-copyright">© Copyright Yoni Brd</div>
+
+        <div class="accroche-card">
+            <div class="accroche-title">METS-TOI EN GARDE<br>CHAMPION(NE) !</div>
+            <div class="accroche-subtitle">Gants bien hauts au niveau des joues,<br>et regarde l’objectif !</div>
+        </div>
+
+        <div class="btn-container">
+            <button class="btn btn-fille" onclick="triggerFileSelect('fille')">📷 PHOTO DE MA GUERRIÈRE</button>
+            <button class="btn btn-garcon" onclick="triggerFileSelect('garcon')">📷 PHOTO DE MON GUERRIER</button>
+        </div>
         
-        <!-- SCREEN 1: ACCUEIL -->
-        <div id="screen-home" class="screen active">
-            <div class="header-copyright">© Copyright Yoni Brd</div>
-
-            <div class="accroche-card animate-pop">
-                <div class="accroche-title">METS-TOI EN GARDE<br>CHAMPION(NE) !</div>
-                <div class="accroche-subtitle">Gants bien hauts au niveau des joues,<br>et regarde l’objectif !</div>
-            </div>
-
-            <div class="btn-container animate-pop delay-1">
-                <button class="btn btn-fille" onclick="triggerFileSelect('fille')">📷 PRENDRE EN PHOTO MA GUERRIÈRE</button>
-                <button class="btn btn-garcon" onclick="triggerFileSelect('garcon')">📷 PRENDRE EN PHOTO MON GUERRIER</button>
-            </div>
-            
-            <div class="privacy-card animate-pop delay-2">
-                🔒 100 % PRIVÉ & SÉCURISÉ<br>
-                <span style="font-size:9.5px; opacity:0.8;">Aucune photo collectée. Traitement 100% local.</span>
-            </div>
-            
-            <input type="file" id="file-input" accept="image/*">
+        <div class="privacy-card">
+            🔒 100 % PRIVÉ & SÉCURISÉ<br>
+            <span style="font-size:9.5px; opacity:0.8;">Aucune photo collectée. Traitement 100% local.</span>
         </div>
-
-        <!-- SCREEN 2: AJUSTEMENT (EXPERT UI) -->
-        <div id="screen-edit" class="screen">
-            <div class="info-badge">👉 PINCEZ POUR ZOOMER / GLISSEZ</div>
-            
-            <!-- Structure robuste Aspect-Ratio -->
-            <div class="editor-wrapper">
-                <div class="canvas-container">
-                    <canvas id="canvas-preview"></canvas>
-                    <div id="touch-layer"></div>
-                </div>
-            </div>
-
-            <div class="controls">
-                <button class="btn btn-action" onclick="resetApp()">🔄 CHANGER DE PHOTO</button>
-                <button class="btn btn-primary" onclick="generateFinal()">✨ VALIDATION TEAM HANGEKI</button>
-            </div>
-        </div>
-
-        <!-- SCREEN 3: RÉSULTAT FINAL -->
-        <div id="screen-result" class="screen">
-            
-            <div class="editor-wrapper">
-                <div class="canvas-container">
-                    <img id="final-image" alt="Diplôme Hangeki">
-                </div>
-            </div>
-            
-            <div class="controls">
-                <div class="ios-alert-box">
-                    ⚠️ SUR IPHONE : Maintenez le doigt sur la photo pour l'enregistrer dans vos photos.
-                </div>
-                <a id="download-link" class="btn btn-success" style="text-decoration: none; text-align: center;">💾 ENREGISTRER LE DIPLÔME</a>
-            </div>
-        </div>
-
+        
+        <input type="file" id="file-input" accept="image/*">
     </div>
 
-    <!-- Canvas caché pour le rendu final HD -->
+    <!-- SCREEN 2: AJUSTEMENT -->
+    <div id="screen-edit" class="screen">
+        <div class="info-badge">👉 PINCEZ POUR ZOOMER / GLISSEZ</div>
+        
+        <div class="editor-wrapper">
+            <canvas id="canvas-preview"></canvas>
+            <div id="touch-layer"></div>
+        </div>
+
+        <!-- LE FOOTER FIXE -->
+        <div class="controls-footer">
+            <button class="btn btn-action btn-icon" onclick="resetApp()">🔄</button>
+            <button class="btn btn-text" onclick="generateFinal()">✨ VALIDER LA PHOTO</button>
+        </div>
+    </div>
+
+    <!-- SCREEN 3: RÉSULTAT FINAL -->
+    <div id="screen-result" class="screen">
+        <div class="ios-alert-box">
+            ⚠️ SUR IPHONE : Maintenez le doigt sur la photo pour l'enregistrer dans vos photos.
+        </div>
+        
+        <div class="editor-wrapper">
+            <img id="final-image" alt="Diplôme Hangeki">
+        </div>
+        
+        <div class="controls-footer">
+            <a id="download-link" class="btn btn-success">💾 ENREGISTRER DANS L'ALBUM</a>
+        </div>
+    </div>
+
     <canvas id="render-canvas" width="1080" height="1920"></canvas>
 
     <script>
@@ -301,7 +225,7 @@
             "Aujourd’hui on apprend les gestes. Demain, on gardera les valeurs."
         ];
 
-        const phrasesGarcons = [...phrasesFilles]; // Copie identique pour l'instant
+        const phrasesGarcons = [...phrasesFilles]; 
 
         let currentMode = 'fille'; 
         let userImage = new Image();
