@@ -5,15 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Photo Generator - Studio Mobile</title>
     
-    <!-- FAVICON DU CLUB (à fournir) -->
     <link rel="icon" type="image/png" href="assets/club_favicon.png" />
 
     <!-- Google Fonts : Inter pour l'UI, Orbitron pour le Cyberpunk -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Orbitron:ital,wght@0,600;0,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Orbitron:ital,wght@0,600;0,800;1,900&display=swap" rel="stylesheet">
 
-    <!-- CSS : DA Modern 3D Claymorphism / Neumorphic Dark UI -->
     <style>
         :root {
             /* Palette Dark Neumorphic */
@@ -29,25 +27,22 @@
 
             /* Neumorphic Double Shadows (Soft & Deep) */
             --shadow-clay-card: 
-                -4px -4px 10px rgba(255, 255, 255, 0.05),
-                inset -1px -1px 2px rgba(255, 255, 255, 0.03),
-                8px 8px 16px rgba(0, 0, 0, 0.3);
+                -4px -4px 10px rgba(255, 255, 255, 0.04),
+                inset -1px -1px 2px rgba(255, 255, 255, 0.02),
+                8px 8px 16px rgba(0, 0, 0, 0.4);
 
             --shadow-clay-btn: 
                 -3px -3px 8px rgba(255, 255, 255, 0.06),
                 4px 4px 10px rgba(0, 0, 0, 0.3);
 
-            /* Claymorphism Pressed / Inset Effect */
             --shadow-clay-pressed:
                 inset 3px 3px 6px rgba(0, 0, 0, 0.6),
-                inset -2px -2px 5px rgba(255, 255, 255, 0.05);
+                inset -2px -2px 5px rgba(255, 255, 255, 0.04);
 
-            --border-radius-card: 24px;
             --border-radius-btn: 18px;
             --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* === RESET & BASE === */
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
         html, body { height: 100%; width: 100%; font-family: 'Inter', sans-serif; background-color: var(--bg-deep); color: var(--text-pure); overflow: hidden; }
 
@@ -59,9 +54,10 @@
         }
 
         /* === UI COMPONENTS === */
-        .page-header { width: 100%; text-align: center; padding: 20px 0; flex-shrink: 0; z-index: 10; }
-        .logo-placeholder { width: 70px; height: 70px; border-radius: 50%; margin: 0 auto; background: var(--shadow-clay-pressed); }
-        .app-title { font-size: 18px; font-weight: 700; margin-top: 10px; color: var(--text-soft); }
+        .page-header { width: 100%; text-align: center; padding: 20px 0; flex-shrink: 0; z-index: 10; position: relative; }
+        .header-copyright { position: absolute; top: 10px; left: 15px; font-size: 10px; font-weight: 600; color: var(--text-soft); }
+        .app-title { font-size: 20px; font-weight: 800; color: var(--text-pure); text-transform: uppercase; line-height: 1.3; }
+        .app-title span { color: #ff8a44; } /* L'accent orange sur le mois */
 
         /* Champ de texte Neumorphique (Saisie du prénom) */
         .neumorphic-input {
@@ -69,97 +65,117 @@
             background: var(--bg-deep); border-radius: 20px; padding: 18px 20px;
             box-shadow: var(--shadow-clay-pressed); border: 1px solid rgba(255,255,255,0.02);
             color: var(--cyan-neon); font-family: 'Orbitron', sans-serif; font-size: 18px; 
-            font-weight: 700; text-align: center; margin: 10px auto 30px auto; display: block;
+            font-weight: 700; text-align: center; display: block; margin: 0 auto;
             outline: none; transition: box-shadow 0.3s var(--ease-in-out);
-            /* Permet de taper au clavier sans que le parent ne soit bloqué par le user-select:none global */
             user-select: auto; -webkit-user-select: auto;
         }
         .neumorphic-input:focus {
             box-shadow: inset 4px 4px 8px rgba(0,0,0,0.8), inset -2px -2px 5px rgba(255,255,255,0.05), 0 0 15px rgba(0, 210, 255, 0.2);
             border: 1px solid rgba(0, 210, 255, 0.3);
         }
-        .neumorphic-input::placeholder { color: rgba(255,255,255,0.2); font-family: 'Inter', sans-serif; font-weight: 400; }
+        .neumorphic-input::placeholder { color: rgba(255,255,255,0.2); font-family: 'Inter', sans-serif; font-weight: 400; font-size: 15px; }
+
+        /* Avertissement de sécurité (Croquis 4) */
+        .privacy-card {
+            background: var(--bg-deep); border-radius: 12px; padding: 12px 15px;
+            font-size: 11px; font-weight: 600; color: var(--text-soft); text-align: center;
+            box-shadow: var(--shadow-clay-pressed); border: 1px solid rgba(255,255,255,0.02);
+            width: 100%; max-width: 320px; margin: 15px auto 0 auto; line-height: 1.4;
+        }
+        .privacy-card span { color: var(--cyan-neon); font-weight: 700; }
+
+        /* Checkbox "Souris ou pas" (Croquis 5) */
+        .checkbox-container {
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            margin: 20px 0; font-size: 15px; font-weight: 700; color: var(--text-pure);
+        }
+        .neumorphic-checkbox {
+            appearance: none; width: 28px; height: 28px;
+            background: var(--bg-deep); border-radius: 8px;
+            box-shadow: var(--shadow-clay-pressed);
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.02);
+        }
+        .neumorphic-checkbox:checked::after {
+            content: '✔'; color: #ff8a44; font-size: 18px; font-weight: bold; text-shadow: 0 0 5px rgba(255, 138, 68, 0.5);
+        }
+
+        /* Modern Clay Toggle Switch */
+        .toggle-container {
+            width: 100%; max-width: 320px; display: flex; align-items: center; justify-content: space-between;
+            background: var(--bg-ui); border-radius: 50px; padding: 10px 15px; box-shadow: var(--shadow-clay-pressed);
+            margin: 20px auto; border: 1px solid rgba(255,255,255,0.02);
+        }
+        .toggle-label { font-size: 13px; font-weight: 600; color: var(--text-soft); }
+        .switch { position: relative; display: inline-block; width: 56px; height: 30px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: var(--bg-deep); transition: .4s var(--ease-in-out);
+            border-radius: 34px; box-shadow: var(--shadow-clay-pressed);
+        }
+        .slider:before {
+            content: ""; position: absolute; height: 22px; width: 22px; left: 4px; bottom: 4px;
+            background-color: white; transition: .4s var(--ease-in-out); border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        input:checked + .slider { background: var(--gradient-blue); }
+        input:checked + .slider:before { transform: translateX(26px); }
 
         /* Le "Magic Container" générique 9:16 pour les photos */
         .photo-frame-container {
-            flex: 1; width: 100%; min-height: 0; display: flex; justify-content: center; align-items: center; padding: 20px;
+            flex: 1; width: 100%; min-height: 0; display: flex; justify-content: center; align-items: center; padding: 10px 20px; position: relative;
         }
-        
         .magic-card-9-16 {
             position: relative; width: 100%; height: 100%; aspect-ratio: 9/16;
-            border-radius: 12px; background: var(--bg-ui);
-            box-shadow: var(--shadow-clay-card);
-            overflow: hidden; border: 1px solid rgba(255,255,255,0.03);
+            background: transparent; overflow: hidden;
             display: flex; justify-content: center; align-items: center;
         }
-
-        #final-render, #touch-layer {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; z-index: 10;
-        }
+        #final-render, #touch-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; z-index: 10; }
         #touch-layer { z-index: 20; touch-action: none; }
 
+        /* Instruction de Zoom (Croquis 6) */
+        .info-badge {
+            position: absolute; top: 0px; left: 50%; transform: translateX(-50%); z-index: 50;
+            background: var(--gradient-orange); border-radius: 10px; padding: 8px 14px;
+            font-size: 12px; font-weight: 800; color: #fff; text-align: center;
+            box-shadow: var(--shadow-clay-btn); animation: pulseBadge 2s infinite;
+            border: 1px solid rgba(255,255,255,0.2); text-transform: uppercase;
+        }
+        @keyframes pulseBadge { 0% { transform: translateX(-50%) scale(1); } 50% { transform: translateX(-50%) scale(1.05); } 100% { transform: translateX(-50%) scale(1); } }
+
+        /* Footer & Buttons */
         .btn-footer {
             width: 100%; display: flex; flex-direction: column; gap: 15px;
-            padding: 20px calc(20px + env(safe-area-inset-bottom)) calc(20px + env(safe-area-inset-bottom));
+            padding: 10px calc(20px + env(safe-area-inset-bottom)) calc(20px + env(safe-area-inset-bottom));
             flex-shrink: 0; z-index: 10;
         }
-
-        /* Claymorphism Buttons with 3D Interaction */
         .clay-btn {
             width: 100%; padding: 18px; border: none; font-family: 'Inter', sans-serif;
-            font-size: 16px; font-weight: 700; text-transform: uppercase; color: #fff;
+            font-size: 16px; font-weight: 800; text-transform: uppercase; color: #fff;
             border-radius: var(--border-radius-btn); box-shadow: var(--shadow-clay-btn);
             cursor: pointer; position: relative; overflow: hidden;
             transition: transform 0.15s var(--ease-in-out), box-shadow 0.1s var(--ease-in-out);
             border: 1px solid rgba(255,255,255,0.05);
         }
-
         .clay-btn::after {
             content: ""; position: absolute; top: -1px; left: 0; width: 100%; height: 50%;
             background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 100%);
             border-radius: var(--border-radius-btn) var(--border-radius-btn) 0 0;
         }
 
-        .btn-primary { background: var(--gradient-blue); }
-        .btn-success { background: var(--gradient-blue); }
-        .btn-secondary { background: var(--bg-ui); color: var(--text-soft); }
+        .btn-primary { background: var(--gradient-orange); } /* ORANGE POUR ACTION PRINCIPALE */
+        .btn-success { background: var(--gradient-orange); } 
+        .btn-secondary { background: var(--bg-ui); color: var(--text-pure); }
+        .btn-blue { background: var(--gradient-blue); }
 
-        .clay-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-clay-btn), 0 5px 15px rgba(37, 117, 252, 0.2); }
+        .clay-btn:hover { transform: translateY(-2px); }
         .clay-btn:active { transform: translateY(1px) scale(0.98); box-shadow: var(--shadow-clay-pressed); }
 
-        /* Modern Clay Toggle Switch */
-        .toggle-container {
-            width: 100%; max-width: 320px; display: flex; align-items: center; justify-content: space-between;
-            background: var(--bg-ui); border-radius: 50px; padding: 10px 15px; box-shadow: var(--shadow-clay-pressed);
-            margin: 0 auto;
-        }
-        .toggle-label { font-size: 14px; font-weight: 600; color: var(--text-soft); }
-        
-        .switch { position: relative; display: inline-block; width: 60px; height: 34px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        
-        .slider {
-            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-            background-color: var(--bg-deep); transition: .4s var(--ease-in-out);
-            border-radius: 34px; border: 1px solid rgba(255,255,255,0.03);
-            box-shadow: var(--shadow-clay-pressed);
-        }
-        .slider:before {
-            content: ""; position: absolute; height: 26px; width: 26px; left: 4px; bottom: 3px;
-            background-color: white; transition: .4s var(--ease-in-out); border-radius: 50%;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.3), inset 0 -3px 3px rgba(0,0,0,0.2);
-        }
-        input:checked + .slider { background: var(--gradient-blue); }
-        input:checked + .slider:before { transform: translateX(26px); }
-
-        /* === PAGES MANAGEMENT === */
+        /* Pages Management */
         .screen { display: none; width: 100%; height: 100%; position: absolute; top: 0; left: 0; flex-direction: column; overflow: hidden; }
         .screen.active { display: flex; animation: clayPop 0.3s var(--ease-in-out) forwards; }
         @keyframes clayPop { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-
-        /* === PAGE SPECIFICS === */
-        #screen-edit, #screen-result { padding: 0; justify-content: flex-start; }
-        #screen-edit .magic-card-9-16, #screen-result .magic-card-9-16 { border-radius: 0; border: none; box-shadow: none; border-bottom: 2px solid rgba(255,255,255,0.03); }
 
         #file-input, #render-canvas { display: none; }
     </style>
@@ -168,80 +184,99 @@
     
     <div class="preload-font">Orbitron</div>
 
-    <!-- MAIN APP WRAPPER -->
     <div id="app-container" style="height: 100%; width: 100%; position: relative;">
         
         <!-- ======================================================== -->
-        <!-- SCREEN 1: ACCUEIL (Saisie Prénom & Thème) -->
+        <!-- SCREEN 1: ACCUEIL (Croquis 1 & 4) -->
         <!-- ======================================================== -->
         <div id="screen-home" class="screen active">
             <header class="page-header">
-                <img id="club-logo" src="assets/app_logo.png" class="logo-placeholder" alt="Logo Club">
-                <div class="app-title">Studio Mobile - Photo Team</div>
+                <div class="header-copyright">© Copyright Yoni Brd</div>
+                <!-- Titre Dynamique généré en JS -->
+                <div id="dynamic-month-title" class="app-title">TA CARTE COLLECTOR<br>DU MOIS DE...</div>
             </header>
 
             <main style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px;">
                 
-                <!-- SAISIE LIBRE DU PRÉNOM (Neumorphic Input) -->
+                <!-- 1. Saisie du prénom -->
                 <div style="width: 100%; text-align: center;">
-                    <label class="toggle-label" style="display:block; margin-bottom: 15px;">👤 IDENTITÉ DU CHAMPION(NE)</label>
-                    <input type="text" id="child-name-input" class="neumorphic-input" placeholder="Prénom ou surnom..." autocomplete="off">
+                    <label style="display:block; margin-bottom: 10px; font-size: 13px; font-weight: 700; color: var(--text-soft);">1. ENTRE TON PRÉNOM / SURNOM</label>
+                    <input type="text" id="child-name-input" class="neumorphic-input" placeholder="Prénom..." autocomplete="off">
                 </div>
 
-                <!-- SWITCH THÈME (CARTOON / FUTURISTE) -->
-                <div class="toggle-container">
-                    <span class="toggle-label">Thème Cartoon</span>
-                    <label class="switch">
-                        <input type="checkbox" id="theme-toggle">
-                        <span class="slider"></span>
-                    </label>
-                    <span class="toggle-label">Thème Cyber</span>
+                <!-- Avertissement de sécurité (Croquis 4) -->
+                <div class="privacy-card">
+                    🔒 <span>100% SÉCURISÉ</span><br>
+                    La photo reste en local sur l'appareil. Seul le prénom est utilisé pour la carte.
+                </div>
+
+                <!-- 2. Thème (Croquis 5) -->
+                <div style="margin-top: 30px; width: 100%;">
+                    <label style="display:block; text-align: center; font-size: 13px; font-weight: 700; color: var(--text-soft);">2. STYLE DE LA CARTE</label>
+                    <div class="toggle-container">
+                        <span class="toggle-label">Cartoon</span>
+                        <label class="switch">
+                            <input type="checkbox" id="theme-toggle">
+                            <span class="slider"></span>
+                        </label>
+                        <span class="toggle-label">Cyber</span>
+                    </div>
                 </div>
             </main>
 
             <footer class="btn-footer">
-                <button id="btn-camera" class="clay-btn btn-primary" onclick="triggerFileSelect()">📷 OUVRIR LA CAMÉRA</button>
+                <!-- Checkbox (Croquis 5) -->
+                <label class="checkbox-container">
+                    <input type="checkbox" class="neumorphic-checkbox">
+                    Souris... OU PAS 😎
+                </label>
+                <button class="clay-btn btn-primary" onclick="triggerFileSelect()">📷 PRENDRE LA PHOTO</button>
             </footer>
             
             <input type="file" id="file-input" accept="image/*">
         </div>
 
         <!-- ======================================================== -->
-        <!-- SCREEN 2: AJUSTEMENT (Photo Plein Écran) -->
+        <!-- SCREEN 2: AJUSTEMENT (Croquis 6 - Retouche Manuelle) -->
         <!-- ======================================================== -->
         <div id="screen-edit" class="screen">
-            <header class="page-header">
-                <div class="app-title" style="font-family: 'Orbitron', sans-serif; text-transform: uppercase;">Ajuster Photo</div>
+            <header class="page-header" style="padding-bottom: 5px;">
+                <div class="app-title" style="font-family: 'Orbitron', sans-serif; font-size: 16px;">AJUSTER LE CADRAGE</div>
             </header>
             
-            <div class="photo-frame-container" style="padding: 0;">
+            <div class="photo-frame-container">
+                <!-- Badge d'instruction au dessus de l'image -->
+                <div class="info-badge">👉 PINCEZ POUR ZOOMER / GLISSEZ</div>
                 <div class="magic-card-9-16">
                     <canvas id="canvas-preview"></canvas>
                     <div id="touch-layer"></div>
                 </div>
             </div>
 
-            <footer class="btn-footer controls-footer">
-                <button class="clay-btn btn-secondary" onclick="resetApp()">🔄 REFAIRE PHOTO</button>
-                <button class="clay-btn btn-primary" onclick="generateFinal()">✨ VALIDER LA PHOTO</button>
+            <footer class="btn-footer" style="flex-direction: row;">
+                <button class="clay-btn btn-secondary" style="flex: 0.3; padding: 18px 0;" onclick="resetApp()">🔄</button>
+                <button class="clay-btn btn-blue" style="flex: 1;" onclick="generateFinal()">✨ VALIDER LA PHOTO</button>
             </footer>
         </div>
 
         <!-- ======================================================== -->
-        <!-- SCREEN 3: RÉSULTAT FINAL (Mode Preview Card) -->
+        <!-- SCREEN 3: RÉSULTAT FINAL (Croquis 7) -->
         <!-- ======================================================== -->
         <div id="screen-result" class="screen">
-             <header class="page-header">
-                <div class="app-title" style="color: var(--cyan-neon);">Carte Collector Prête</div>
+             <header class="page-header" style="padding-bottom: 5px;">
+                <div class="app-title" style="color: var(--cyan-neon); font-size: 16px;">CARTE PRÊTE</div>
             </header>
 
             <div class="photo-frame-container">
-                <div class="magic-card-9-16">
+                <div class="magic-card-9-16" style="box-shadow: 8px 8px 16px rgba(0,0,0,0.6); border: 2px solid rgba(255,255,255,0.05); border-radius: 8px;">
                     <img id="final-image" alt="Diplôme Hangeki">
                 </div>
             </div>
             
-            <footer class="btn-footer footer-result">
+            <footer class="btn-footer">
+                <div class="privacy-card" style="margin: 0 auto 10px auto;">
+                    ⚠️ <span>SUR IPHONE</span> : Maintenez le doigt sur la photo pour l'enregistrer dans l'album.
+                </div>
                 <a id="download-link" class="clay-btn btn-success" style="text-decoration: none; text-align: center;">💾 ENREGISTRER DANS L'ALBUM</a>
             </footer>
         </div>
@@ -251,38 +286,23 @@
     <!-- Canvas caché pour le rendu final HD -->
     <canvas id="render-canvas" width="1080" height="1920"></canvas>
 
-    <!-- ======================================================== -->
-    <!-- SCRIPT APPLICATION GÉNERIQUE -->
-    <!-- ======================================================== -->
     <script>
-        /* === CONFIGURATION DE L'APP === */
+        /* === CONFIGURATION === */
         const APP_CONFIG = {
-            /* Chemins vers vos assets PNG (Ratio 9:16) */
             pngFrames: {
                 cartoon: "assets/frame_cartoon.png",
                 cyber: "assets/frame_cyber.png"
             },
-            
-            /* Fontes (Modern UI / Futuriste Cyberpunk) */
             fonts: {
                 base: "Inter, sans-serif",
                 futuristic: "Orbitron, sans-serif"
             },
-            
-            /* Affichage automatique des informations */
-            toggles: {
-                showMonthText: true, 
-                showChildName: true  
-            },
-
-            /* Mois générés automatiquement selon la date système */
             monthsFr: [
                 "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", 
                 "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
             ]
         };
 
-        /* === LOGIQUE FRONDTEND GÉNÉRIQUE === */
         let userImage = new Image();
         let frameImage = new Image();
         let currentTheme = 'cartoon'; 
@@ -295,6 +315,12 @@
         const CANVAS_WIDTH = 1080;
         const CANVAS_HEIGHT = 1920;
 
+        // Mise à jour du Titre au chargement
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentMonth = APP_CONFIG.monthsFr[new Date().getMonth()].toUpperCase();
+            document.getElementById('dynamic-month-title').innerHTML = `TA CARTE COLLECTOR<br>DU MOIS DE <span>${currentMonth}</span>`;
+        });
+
         function showScreen(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
@@ -306,16 +332,12 @@
         }
 
         function triggerFileSelect() {
-            // Validation de la saisie manuelle du prénom
             const nameInput = document.getElementById('child-name-input').value.trim();
             if(!nameInput) {
-                alert("Veuillez inscrire le prénom ou le surnom de l'enfant 🥊");
+                alert("Veuillez inscrire ton prénom ou surnom 😎");
                 return;
             }
-            // Forcer en majuscules pour le style Cyber/Viral
             selectedChildName = nameInput.toUpperCase();
-
-            // Choix du thème
             currentTheme = document.getElementById('theme-toggle').checked ? 'cyber' : 'cartoon';
             frameImage.src = APP_CONFIG.pngFrames[currentTheme];
             
@@ -395,14 +417,16 @@
         });
 
         // ========================================================
-        // CANVAS GÉNÉRIQUE & RENDU CYBER VIRAL
+        // CANVAS & RETOUCHE MANUELLE 7° (Croquis 6)
         // ========================================================
         function drawScene(ctx, width, height, withText = false) {
             ctx.fillStyle = "#ffffff";
             ctx.fillRect(0, 0, width, height);
 
             ctx.save();
-            ctx.translate(width / 2, height / 2); 
+            // LA ROTATION INDISPENSABLE DE 7° EST BIEN LÀ !
+            ctx.translate(width / 2, height / 2 - 100); 
+            ctx.rotate(7 * Math.PI / 180); 
             ctx.translate(imgPosX, imgPosY);
             ctx.scale(imgScale, imgScale);
             
@@ -422,32 +446,20 @@
                 ctx.textAlign = "center";
                 ctx.textBaseline = "middle";
 
-                // 1. Rendu du Prénom (Effet Néon Cyberpunk)
-                if(APP_CONFIG.toggles.showChildName) {
-                    // Police Italique ultra-grasse
-                    ctx.font = `italic 900 120px '${APP_CONFIG.fonts.futuristic}'`;
-                    
-                    // Passe 1 : Le Halo Néon Cyan
-                    ctx.fillStyle = "#ffffff";
-                    ctx.shadowColor = "#00d2ff";
-                    ctx.shadowBlur = 30;
-                    ctx.shadowOffsetX = 0;
-                    ctx.shadowOffsetY = 0;
-                    wrapTextGen(ctx, selectedChildName, width / 2, height - 280, width - 150, 120);
+                // Rendu du Prénom (Effet Néon)
+                ctx.font = `italic 900 120px '${APP_CONFIG.fonts.futuristic}'`;
+                ctx.fillStyle = "#ffffff";
+                ctx.shadowColor = "#00d2ff";
+                ctx.shadowBlur = 30;
+                wrapTextGen(ctx, selectedChildName, width / 2, height - 280, width - 150, 120);
 
-                    // Passe 2 : Le cœur blanc pur (superposé pour l'éclat)
-                    ctx.shadowBlur = 0;
-                    wrapTextGen(ctx, selectedChildName, width / 2, height - 280, width - 150, 120);
-                }
+                ctx.shadowBlur = 0;
+                wrapTextGen(ctx, selectedChildName, width / 2, height - 280, width - 150, 120);
                 
-                // 2. Rendu du Mois
-                if(APP_CONFIG.toggles.showMonthText) {
-                    // Police propre et lisible pour équilibrer
-                    ctx.font = `600 50px '${APP_CONFIG.fonts.base}'`;
-                    ctx.fillStyle = "#a0aec0"; 
-                    ctx.shadowBlur = 0; // Nettoyer l'ombre du prénom
-                    wrapTextGen(ctx, monthText.toUpperCase(), width / 2, height - 150, width - 200, 60);
-                }
+                // Rendu du Mois
+                ctx.font = `600 50px '${APP_CONFIG.fonts.base}'`;
+                ctx.fillStyle = "#a0aec0"; 
+                wrapTextGen(ctx, monthText.toUpperCase(), width / 2, height - 150, width - 200, 60);
 
                 ctx.restore();
             }
