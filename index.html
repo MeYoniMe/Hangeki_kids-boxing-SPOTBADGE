@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Photo Generator - Studio Mobile</title>
     
-    <link rel="icon" type="image/png" href="assets/club_favicon.png" />
+    <link rel="icon" type="image/png" href="club_favicon.png" />
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -147,7 +147,7 @@
         .btn-blue { background: var(--gradient-blue); padding: 18px 10px; font-weight: 800; font-size: 16px; letter-spacing: 1px;}
 
         .clay-btn:hover { transform: translateY(-2px); }
-        .clay-btn:active { transform: translateY(1px) scale(0.98); box-shadow: var(--shadow-clay-pressed); }
+        .clay-btn:active { transform: translateY(4px) scale(0.95); box-shadow: inset 5px 5px 12px rgba(0, 0, 0, 0.8), inset -2px -2px 5px rgba(255, 255, 255, 0.05); }
 
         /* Containers Editor & Result */
         .photo-frame-container { flex: 1; width: 100%; min-height: 0; display: flex; justify-content: center; align-items: center; padding: 10px 20px; position: relative; }
@@ -240,23 +240,17 @@
             </header>
 
             <div class="photo-frame-container">
-                <div class="magic-card-9-16" style="border: 2px solid rgba(255,255,255,0.1); border-radius: 12px; box-shadow: var(--shadow-clay-card);">
-                    <!-- Image de modèle à reproduire -->
-                    <img id="pose-model-img" src="assets/pose.png" alt="Modèle" style="width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5));">
+                <div class="magic-card-9-16" style="border: 2px solid rgba(255,255,255,0.1); border-radius: 12px; box-shadow: var(--shadow-clay-card); background: rgba(0,0,0,0.2);">
+                    <!-- Image de modèle à reproduire (chargement direct à la racine) -->
+                    <img id="pose-model-img" src="pose.png" alt="Modèle" style="width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5));" onerror="this.src='https://placehold.co/1080x1920/151d30/00d2ff?text=Modèle+Pose'">
                 </div>
             </div>
 
             <footer class="btn-footer" style="padding-top: 30px;">
-                <div style="position: relative; width: 100%;">
-                    <!-- Checkbox incluse avec le bouton -->
-                    <label class="checkbox-container">
-                        <input type="checkbox" class="neumorphic-checkbox">
-                        Souris... OU PAS 😎
-                    </label>
-                    <button class="clay-btn btn-primary" onclick="triggerFileSelect()" style="padding-top: 32px; padding-bottom: 16px;">
-                        📷 PRENDRE LA PHOTO
-                    </button>
-                </div>
+                <button class="clay-btn btn-primary" onclick="triggerFileSelect()" style="padding: 16px 10px;">
+                    <span style="font-size: 19px; font-weight: 800; letter-spacing: 1px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">📷 PRENDRE LA PHOTO</span>
+                    <span style="font-size: 13px; font-weight: 600; opacity: 0.9; margin-top: 6px; text-transform: none;">Souris... OU PAS 😎</span>
+                </button>
             </footer>
             
             <input type="file" id="file-input" accept="image/*">
@@ -304,10 +298,10 @@
     <script>
         /* === CONFIGURATION === */
         const APP_CONFIG = {
-            pngPose: "assets/pose.png",
+            pngPose: "pose.png",
             pngFrames: {
-                cartoon: "assets/frame_cartoon.png",
-                cyber: "assets/frame_cyber.png"
+                cartoon: "frame_cartoon.png",
+                cyber: "frame_cyber.png"
             },
             fonts: {
                 base: "Inter, sans-serif",
@@ -359,8 +353,8 @@
             selectedChildName = nameInput.toUpperCase();
             currentTheme = document.querySelector('input[name="theme_choice"]:checked').value;
             
-            // On s'assure d'afficher le modèle
-            document.getElementById('pose-model-img').src = APP_CONFIG.pngPose;
+            // On s'assure d'afficher le modèle correctement
+            document.getElementById('pose-model-img').src = APP_CONFIG.pngPose || "pose.png";
             showScreen('screen-pose');
         }
 
