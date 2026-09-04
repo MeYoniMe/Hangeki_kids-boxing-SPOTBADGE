@@ -2,255 +2,292 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Diplôme Officiel - B.C Han-Geki</title>
-    <!-- Polices Néo-Brutalistes + Caveat -->
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@500;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Photo Generator - Studio Mobile</title>
+    
+    <!-- FAVICON DU CLUB (à fournir) -->
+    <link rel="icon" type="image/png" href="assets/club_favicon.png" />
+
+    <!-- Google Fonts : Inter pour l'UI, Orbitron pour le Cyberpunk -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Orbitron:ital,wght@0,600;0,800;1,900&display=swap" rel="stylesheet">
+
+    <!-- CSS : DA Modern 3D Claymorphism / Neumorphic Dark UI -->
     <style>
-        /* === VARIABLES NEO-BRUTALISM === */
         :root {
-            --cream: #FDFBF7;
-            --yellow: #FFE600;
-            --red: #FF3B30;
-            --blue: #0066FF;
-            --green: #00F090;
-            --dark: #121212;
+            /* Palette Dark Neumorphic */
+            --bg-deep: #0c1322;
+            --bg-ui: #151d30;
+            --text-pure: #ffffff;
+            --text-soft: #a0aec0;
             
-            --border-thick: 3px solid var(--dark);
-            --shadow-hard: 4px 4px 0px var(--dark);
-            --shadow-pressed: 1px 1px 0px var(--dark);
-            --radius-modern: 12px;
+            /* Accents Claymorphism */
+            --gradient-blue: linear-gradient(135deg, #2575fc 0%, #1a54b8 100%);
+            --gradient-orange: linear-gradient(135deg, #ff8a44 0%, #e05338 100%);
+            --cyan-neon: #00d2ff;
+
+            /* Neumorphic Double Shadows (Soft & Deep) */
+            --shadow-clay-card: 
+                -4px -4px 10px rgba(255, 255, 255, 0.05),
+                inset -1px -1px 2px rgba(255, 255, 255, 0.03),
+                8px 8px 16px rgba(0, 0, 0, 0.3);
+
+            --shadow-clay-btn: 
+                -3px -3px 8px rgba(255, 255, 255, 0.06),
+                4px 4px 10px rgba(0, 0, 0, 0.3);
+
+            /* Claymorphism Pressed / Inset Effect */
+            --shadow-clay-pressed:
+                inset 3px 3px 6px rgba(0, 0, 0, 0.6),
+                inset -2px -2px 5px rgba(255, 255, 255, 0.05);
+
+            --border-radius-card: 24px;
+            --border-radius-btn: 18px;
+            --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
+        /* === RESET & BASE === */
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
+        html, body { height: 100%; width: 100%; font-family: 'Inter', sans-serif; background-color: var(--bg-deep); color: var(--text-pure); overflow: hidden; }
+
+        /* Noise Texture Overlay */
+        body::before {
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3%3Ffilter id='noiseFilter'%3%3FfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3%3F/filter%3%3F%3Frect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3%3F/svg%3%3F");
+            opacity: 0.03; pointer-events: none; z-index: -1;
+        }
+
+        /* === UI COMPONENTS === */
+        .page-header { width: 100%; text-align: center; padding: 20px 0; flex-shrink: 0; z-index: 10; }
+        .logo-placeholder { width: 70px; height: 70px; border-radius: 50%; margin: 0 auto; background: var(--shadow-clay-pressed); }
+        .app-title { font-size: 18px; font-weight: 700; margin-top: 10px; color: var(--text-soft); }
+
+        /* Champ de texte Neumorphique (Saisie du prénom) */
+        .neumorphic-input {
+            width: 100%; max-width: 320px; appearance: none;
+            background: var(--bg-deep); border-radius: 20px; padding: 18px 20px;
+            box-shadow: var(--shadow-clay-pressed); border: 1px solid rgba(255,255,255,0.02);
+            color: var(--cyan-neon); font-family: 'Orbitron', sans-serif; font-size: 18px; 
+            font-weight: 700; text-align: center; margin: 10px auto 30px auto; display: block;
+            outline: none; transition: box-shadow 0.3s var(--ease-in-out);
+            /* Permet de taper au clavier sans que le parent ne soit bloqué par le user-select:none global */
+            user-select: auto; -webkit-user-select: auto;
+        }
+        .neumorphic-input:focus {
+            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.8), inset -2px -2px 5px rgba(255,255,255,0.05), 0 0 15px rgba(0, 210, 255, 0.2);
+            border: 1px solid rgba(0, 210, 255, 0.3);
+        }
+        .neumorphic-input::placeholder { color: rgba(255,255,255,0.2); font-family: 'Inter', sans-serif; font-weight: 400; }
+
+        /* Le "Magic Container" générique 9:16 pour les photos */
+        .photo-frame-container {
+            flex: 1; width: 100%; min-height: 0; display: flex; justify-content: center; align-items: center; padding: 20px;
+        }
         
-        body { 
-            font-family: 'Outfit', sans-serif; 
-            background-color: var(--cream);
-            color: var(--dark); 
-            height: 100dvh; 
-            overflow: hidden; /* AUCUN SCROLL POSSIBLE */
-            display: flex; flex-direction: column; 
-            background-image: radial-gradient(rgba(18,18,18,0.06) 1.5px, transparent 1.5px);
-            background-size: 14px 14px;
-        }
-        
-        .preload-font { font-family: 'Caveat', cursive; position: absolute; opacity: 0; pointer-events: none; z-index: -1; }
-
-        /* === MARQUEE (Bandeau déroulant) === */
-        .marquee {
-            width: 100%; background-color: var(--yellow); border-bottom: var(--border-thick);
-            overflow: hidden; white-space: nowrap; z-index: 100; padding: 6px 0;
-            display: flex; align-items: center; flex-shrink: 0;
-        }
-        .marquee-track { display: flex; width: max-content; animation: scroll-marquee 12s linear infinite; }
-        .marquee span { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 1.5px; color: var(--dark); padding: 0 15px; }
-        @keyframes scroll-marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-
-        /* === SCREENS === */
-        .screen { 
-            display: none; width: 100vw; height: calc(100dvh - 38px); 
-            position: absolute; top: 38px; left: 0; 
-            overflow: hidden; flex-direction: column; align-items: center; 
-        }
-        .screen.active { display: flex; }
-        
-        /* === PAGE 1 : ACCUEIL === */
-        #screen-home { justify-content: center; padding: 20px; gap: 20px; }
-        
-        .header-copyright { position: absolute; top: 10px; left: 20px; font-size: 11px; font-weight: 800; color: rgba(18,18,18,0.5); z-index: 100; }
-
-        .accroche-card { 
-            background: #fff; border: var(--border-thick); border-radius: var(--radius-modern); box-shadow: var(--shadow-hard);
-            padding: 25px 20px; width: 100%; max-width: 350px; text-align: center;
-        }
-        .accroche-title { font-family: 'Bebas Neue', sans-serif; font-size: 34px; line-height: 1.1; color: var(--dark); letter-spacing: 0.5px; }
-        .accroche-subtitle { font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 700; margin-top: 10px; color: #444; }
-
-        .btn-container { width: 100%; max-width: 350px; display: flex; flex-direction: column; gap: 15px; }
-        
-        .btn {
-            width: 100%; padding: 16px; border: var(--border-thick); border-radius: var(--radius-modern);
-            box-shadow: var(--shadow-hard); font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 800; 
-            text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; justify-content: center; gap: 10px;
-            cursor: pointer; position: relative; transition: transform 0.1s, box-shadow 0.1s;
-        }
-        .btn:active { transform: translate(3px, 3px); box-shadow: var(--shadow-pressed); }
-        .btn-fille { background: var(--red); color: #fff; }
-        .btn-garcon { background: var(--blue); color: #fff; }
-
-        .privacy-card {
-            background: #fff; border: 2px solid var(--dark); border-radius: 10px; padding: 10px 15px;
-            font-size: 11px; font-weight: 700; color: var(--dark); text-align: center; line-height: 1.3;
-            transform: rotate(-1.5deg); box-shadow: 2px 2px 0px var(--dark); margin-top: 5px;
+        .magic-card-9-16 {
+            position: relative; width: 100%; height: 100%; aspect-ratio: 9/16;
+            border-radius: 12px; background: var(--bg-ui);
+            box-shadow: var(--shadow-clay-card);
+            overflow: hidden; border: 1px solid rgba(255,255,255,0.03);
+            display: flex; justify-content: center; align-items: center;
         }
 
-        /* === PAGE 2 : ÉDITEUR === */
-        #screen-edit { padding: 0; justify-content: flex-start; }
-
-        .info-badge {
-            position: absolute; top: 12px; left: 50%; transform: translateX(-50%); z-index: 50;
-            background: var(--yellow); border: var(--border-thick); border-radius: 10px; padding: 8px 14px;
-            font-size: 12px; font-weight: 800; color: var(--dark); text-align: center;
-            box-shadow: var(--shadow-hard); animation: pulseBadge 2s infinite;
-        }
-        @keyframes pulseBadge { 0% { transform: translateX(-50%) scale(1); } 50% { transform: translateX(-50%) scale(1.05); } 100% { transform: translateX(-50%) scale(1); } }
-
-        .editor-wrapper {
-            width: 100vw; height: calc(100vw * 16 / 9); max-width: 500px; max-height: calc(500px * 16 / 9);
-            position: relative; flex-shrink: 0; 
-        }
-
-        #canvas-preview, #touch-layer {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        #final-render, #touch-layer {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; z-index: 10;
         }
         #touch-layer { z-index: 20; touch-action: none; }
 
-        /* LE FOOTER FIXE */
-        .controls-footer {
-            position: absolute; bottom: 0; left: 0; width: 100%; z-index: 100;
-            display: flex; flex-direction: row; gap: 10px;
-            padding: 12px 15px calc(12px + env(safe-area-inset-bottom)); 
-            background: var(--cream); border-top: var(--border-thick);
+        .btn-footer {
+            width: 100%; display: flex; flex-direction: column; gap: 15px;
+            padding: 20px calc(20px + env(safe-area-inset-bottom)) calc(20px + env(safe-area-inset-bottom));
+            flex-shrink: 0; z-index: 10;
         }
 
-        .btn-icon { width: 55px; padding: 0; display: flex; align-items: center; justify-content: center; font-size: 22px; }
-        .btn-text { flex: 1; background: var(--yellow); color: var(--dark); }
-        .btn-success { flex: 1; background: var(--green); color: var(--dark); text-decoration: none; }
-
-        /* === PAGE 3 : RÉSULTAT FINAL (PREVIEW CARD) === */
-        /* CORRECTION ICI : flex-start plaque le conteneur en haut, libérant la place pour les boutons en bas */
-        #screen-result { padding: 0; justify-content: flex-start; }
-
-        .result-wrapper {
-            width: 100%;
-            height: calc(100% - 150px); /* Calcule précisément l'espace dispo HORS boutons du bas */
-            display: flex; align-items: center; justify-content: center;
-            padding: 15px 20px;
+        /* Claymorphism Buttons with 3D Interaction */
+        .clay-btn {
+            width: 100%; padding: 18px; border: none; font-family: 'Inter', sans-serif;
+            font-size: 16px; font-weight: 700; text-transform: uppercase; color: #fff;
+            border-radius: var(--border-radius-btn); box-shadow: var(--shadow-clay-btn);
+            cursor: pointer; position: relative; overflow: hidden;
+            transition: transform 0.15s var(--ease-in-out), box-shadow 0.1s var(--ease-in-out);
+            border: 1px solid rgba(255,255,255,0.05);
         }
 
-        #final-image {
-            max-width: 100%; max-height: 100%;
-            object-fit: contain;
-            border: var(--border-thick); border-radius: 8px;
-            box-shadow: 8px 8px 0px rgba(0,0,0,0.15);
+        .clay-btn::after {
+            content: ""; position: absolute; top: -1px; left: 0; width: 100%; height: 50%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 100%);
+            border-radius: var(--border-radius-btn) var(--border-radius-btn) 0 0;
         }
 
-        .footer-result {
-            flex-direction: column;
-            padding-top: 15px; gap: 12px;
-        }
+        .btn-primary { background: var(--gradient-blue); }
+        .btn-success { background: var(--gradient-blue); }
+        .btn-secondary { background: var(--bg-ui); color: var(--text-soft); }
 
-        .ios-alert-box {
-            background: #fff; border: 2px solid var(--dark); border-radius: 8px;
-            padding: 10px 15px; width: 100%; text-align: center; font-size: 11px; font-weight: 800; color: var(--dark);
-            box-shadow: 2px 2px 0px var(--dark);
+        .clay-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-clay-btn), 0 5px 15px rgba(37, 117, 252, 0.2); }
+        .clay-btn:active { transform: translateY(1px) scale(0.98); box-shadow: var(--shadow-clay-pressed); }
+
+        /* Modern Clay Toggle Switch */
+        .toggle-container {
+            width: 100%; max-width: 320px; display: flex; align-items: center; justify-content: space-between;
+            background: var(--bg-ui); border-radius: 50px; padding: 10px 15px; box-shadow: var(--shadow-clay-pressed);
+            margin: 0 auto;
         }
+        .toggle-label { font-size: 14px; font-weight: 600; color: var(--text-soft); }
+        
+        .switch { position: relative; display: inline-block; width: 60px; height: 34px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: var(--bg-deep); transition: .4s var(--ease-in-out);
+            border-radius: 34px; border: 1px solid rgba(255,255,255,0.03);
+            box-shadow: var(--shadow-clay-pressed);
+        }
+        .slider:before {
+            content: ""; position: absolute; height: 26px; width: 26px; left: 4px; bottom: 3px;
+            background-color: white; transition: .4s var(--ease-in-out); border-radius: 50%;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3), inset 0 -3px 3px rgba(0,0,0,0.2);
+        }
+        input:checked + .slider { background: var(--gradient-blue); }
+        input:checked + .slider:before { transform: translateX(26px); }
+
+        /* === PAGES MANAGEMENT === */
+        .screen { display: none; width: 100%; height: 100%; position: absolute; top: 0; left: 0; flex-direction: column; overflow: hidden; }
+        .screen.active { display: flex; animation: clayPop 0.3s var(--ease-in-out) forwards; }
+        @keyframes clayPop { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+        /* === PAGE SPECIFICS === */
+        #screen-edit, #screen-result { padding: 0; justify-content: flex-start; }
+        #screen-edit .magic-card-9-16, #screen-result .magic-card-9-16 { border-radius: 0; border: none; box-shadow: none; border-bottom: 2px solid rgba(255,255,255,0.03); }
 
         #file-input, #render-canvas { display: none; }
     </style>
 </head>
 <body>
     
-    <div class="preload-font">Préchargement de la police manuscrite</div>
+    <div class="preload-font">Orbitron</div>
 
-    <!-- BANDEAU MARQUEE -->
-    <div class="marquee">
-        <div class="marquee-track">
-            <span>TEAM 2026/2027 • FORCE & RESPECT •</span>
-            <span>TEAM 2026/2027 • FORCE & RESPECT •</span>
-            <span>TEAM 2026/2027 • FORCE & RESPECT •</span>
-            <span>TEAM 2026/2027 • FORCE & RESPECT •</span>
-        </div>
-    </div>
-
-    <!-- SCREEN 1: ACCUEIL -->
-    <div id="screen-home" class="screen active">
-        <div class="header-copyright">© Copyright Yoni Brd</div>
-
-        <div class="accroche-card">
-            <div class="accroche-title">METS-TOI EN GARDE<br>CHAMPION(NE) !</div>
-            <div class="accroche-subtitle">Gants bien hauts au niveau des joues,<br>et regarde l’objectif !</div>
-        </div>
-
-        <div class="btn-container">
-            <button class="btn btn-fille" onclick="triggerFileSelect('fille')">📷 PHOTO DE MA GUERRIÈRE</button>
-            <button class="btn btn-garcon" onclick="triggerFileSelect('garcon')">📷 PHOTO DE MON GUERRIER</button>
-        </div>
+    <!-- MAIN APP WRAPPER -->
+    <div id="app-container" style="height: 100%; width: 100%; position: relative;">
         
-        <div class="privacy-card">
-            🔒 100 % PRIVÉ & SÉCURISÉ<br>
-            <span style="font-size:9.5px; opacity:0.8;">Aucune photo collectée. Traitement 100% local.</span>
-        </div>
-        
-        <input type="file" id="file-input" accept="image/*">
-    </div>
+        <!-- ======================================================== -->
+        <!-- SCREEN 1: ACCUEIL (Saisie Prénom & Thème) -->
+        <!-- ======================================================== -->
+        <div id="screen-home" class="screen active">
+            <header class="page-header">
+                <img id="club-logo" src="assets/app_logo.png" class="logo-placeholder" alt="Logo Club">
+                <div class="app-title">Studio Mobile - Photo Team</div>
+            </header>
 
-    <!-- SCREEN 2: AJUSTEMENT (Image 100% sans bordures) -->
-    <div id="screen-edit" class="screen">
-        <div class="info-badge">👉 PINCEZ POUR ZOOMER / GLISSEZ</div>
-        
-        <div class="editor-wrapper">
-            <canvas id="canvas-preview"></canvas>
-            <div id="touch-layer"></div>
+            <main style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px;">
+                
+                <!-- SAISIE LIBRE DU PRÉNOM (Neumorphic Input) -->
+                <div style="width: 100%; text-align: center;">
+                    <label class="toggle-label" style="display:block; margin-bottom: 15px;">👤 IDENTITÉ DU CHAMPION(NE)</label>
+                    <input type="text" id="child-name-input" class="neumorphic-input" placeholder="Prénom ou surnom..." autocomplete="off">
+                </div>
+
+                <!-- SWITCH THÈME (CARTOON / FUTURISTE) -->
+                <div class="toggle-container">
+                    <span class="toggle-label">Thème Cartoon</span>
+                    <label class="switch">
+                        <input type="checkbox" id="theme-toggle">
+                        <span class="slider"></span>
+                    </label>
+                    <span class="toggle-label">Thème Cyber</span>
+                </div>
+            </main>
+
+            <footer class="btn-footer">
+                <button id="btn-camera" class="clay-btn btn-primary" onclick="triggerFileSelect()">📷 OUVRIR LA CAMÉRA</button>
+            </footer>
+            
+            <input type="file" id="file-input" accept="image/*">
         </div>
 
-        <div class="controls-footer">
-            <button class="btn btn-action btn-icon" onclick="resetApp()">🔄</button>
-            <button class="btn btn-text" onclick="generateFinal()">✨ VALIDER LA PHOTO</button>
-        </div>
-    </div>
-
-    <!-- SCREEN 3: RÉSULTAT FINAL (Mode Preview Card propre) -->
-    <div id="screen-result" class="screen">
-        <div class="result-wrapper">
-            <img id="final-image" alt="Diplôme Hangeki">
-        </div>
-        
-        <!-- Footer vertical spécifique à la fin -->
-        <div class="controls-footer footer-result">
-            <div class="ios-alert-box">
-                ⚠️ SUR IPHONE : Maintenez le doigt sur la photo pour l'enregistrer dans l'album.
+        <!-- ======================================================== -->
+        <!-- SCREEN 2: AJUSTEMENT (Photo Plein Écran) -->
+        <!-- ======================================================== -->
+        <div id="screen-edit" class="screen">
+            <header class="page-header">
+                <div class="app-title" style="font-family: 'Orbitron', sans-serif; text-transform: uppercase;">Ajuster Photo</div>
+            </header>
+            
+            <div class="photo-frame-container" style="padding: 0;">
+                <div class="magic-card-9-16">
+                    <canvas id="canvas-preview"></canvas>
+                    <div id="touch-layer"></div>
+                </div>
             </div>
-            <a id="download-link" class="btn btn-success" style="text-decoration: none; text-align: center;">💾 ENREGISTRER DANS L'ALBUM</a>
+
+            <footer class="btn-footer controls-footer">
+                <button class="clay-btn btn-secondary" onclick="resetApp()">🔄 REFAIRE PHOTO</button>
+                <button class="clay-btn btn-primary" onclick="generateFinal()">✨ VALIDER LA PHOTO</button>
+            </footer>
         </div>
+
+        <!-- ======================================================== -->
+        <!-- SCREEN 3: RÉSULTAT FINAL (Mode Preview Card) -->
+        <!-- ======================================================== -->
+        <div id="screen-result" class="screen">
+             <header class="page-header">
+                <div class="app-title" style="color: var(--cyan-neon);">Carte Collector Prête</div>
+            </header>
+
+            <div class="photo-frame-container">
+                <div class="magic-card-9-16">
+                    <img id="final-image" alt="Diplôme Hangeki">
+                </div>
+            </div>
+            
+            <footer class="btn-footer footer-result">
+                <a id="download-link" class="clay-btn btn-success" style="text-decoration: none; text-align: center;">💾 ENREGISTRER DANS L'ALBUM</a>
+            </footer>
+        </div>
+
     </div>
 
+    <!-- Canvas caché pour le rendu final HD -->
     <canvas id="render-canvas" width="1080" height="1920"></canvas>
 
+    <!-- ======================================================== -->
+    <!-- SCRIPT APPLICATION GÉNERIQUE -->
+    <!-- ======================================================== -->
     <script>
-        const phrasesFilles = [
-            "Chaque entraînement construit la confiance, le respect et le caractère.",
-            "On vient apprendre un sport, on repart avec des valeurs pour la vie.",
-            "Chaque effort nous rend plus fort, chaque entraînement nous fait grandir.",
-            "Apprendre, progresser, respecter… et devenir chaque jour une meilleure version de soi-même.",
-            "L’entraînement apprend à persévérer quand les choses deviennent difficiles.",
-            "Chaque entraînement est une nouvelle occasion de prendre confiance en soi.",
-            "Le sport apprend à gagner avec humilité et à progresser avec respect.",
-            "À chaque séance, le corps progresse et le caractère se construit.",
-            "Chaque entraînement est un petit pas vers la personne que l’on deviendra.",
-            "S’entraîner, c’est apprendre l’effort, le respect et la persévérance.",
-            "On apprend à tomber, à se relever et à continuer d’avancer.",
-            "À l’entraînement, chaque progrès mérite d’être une fierté.",
-            "Chaque séance apporte une nouvelle leçon, chaque leçon nous fait grandir.",
-            "L’entraînement donne la force d’essayer, la confiance de continuer et le respect des autres.",
-            "Plus qu’un entraînement : une leçon de courage, de respect et de confiance.",
-            "Apprendre à être fort, mais surtout apprendre à être meilleur.",
-            "Chaque effort accompli aujourd’hui construit la confiance de demain.",
-            "À force de s’entraîner, on découvre une force que l’on ne soupçonnait pas.",
-            "Le plus beau résultat d’un entraînement, c’est ce que l’on devient.",
-            "Chaque séance apprend la discipline, nourrit la confiance et fait grandir.",
-            "Le sport apprend à respecter son partenaire, à croire en soi et à ne jamais abandonner.",
-            "Petit à petit, l’entraînement transforme l’effort en confiance et les défis en fierté.",
-            "Aujourd’hui on apprend les gestes. Demain, on gardera les valeurs."
-        ];
+        /* === CONFIGURATION DE L'APP === */
+        const APP_CONFIG = {
+            /* Chemins vers vos assets PNG (Ratio 9:16) */
+            pngFrames: {
+                cartoon: "assets/frame_cartoon.png",
+                cyber: "assets/frame_cyber.png"
+            },
+            
+            /* Fontes (Modern UI / Futuriste Cyberpunk) */
+            fonts: {
+                base: "Inter, sans-serif",
+                futuristic: "Orbitron, sans-serif"
+            },
+            
+            /* Affichage automatique des informations */
+            toggles: {
+                showMonthText: true, 
+                showChildName: true  
+            },
 
-        const phrasesGarcons = [...phrasesFilles]; 
+            /* Mois générés automatiquement selon la date système */
+            monthsFr: [
+                "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", 
+                "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
+            ]
+        };
 
-        let currentMode = 'fille'; 
+        /* === LOGIQUE FRONDTEND GÉNÉRIQUE === */
         let userImage = new Image();
         let frameImage = new Image();
-        
+        let currentTheme = 'cartoon'; 
+        let selectedChildName = '';
+
         let imgScale = 1;
         let imgPosX = 0;
         let imgPosY = 0;
@@ -268,12 +305,24 @@
             showScreen('screen-home');
         }
 
-        function triggerFileSelect(mode) {
-            currentMode = mode;
-            frameImage.src = mode === 'fille' ? 'cadre_fille.png' : 'cadre_garcon.png';
+        function triggerFileSelect() {
+            // Validation de la saisie manuelle du prénom
+            const nameInput = document.getElementById('child-name-input').value.trim();
+            if(!nameInput) {
+                alert("Veuillez inscrire le prénom ou le surnom de l'enfant 🥊");
+                return;
+            }
+            // Forcer en majuscules pour le style Cyber/Viral
+            selectedChildName = nameInput.toUpperCase();
+
+            // Choix du thème
+            currentTheme = document.getElementById('theme-toggle').checked ? 'cyber' : 'cartoon';
+            frameImage.src = APP_CONFIG.pngFrames[currentTheme];
+            
             document.getElementById('file-input').click();
         }
 
+        // --- GESTION PHOTO ---
         document.getElementById('file-input').addEventListener('change', function(e) {
             if (e.target.files && e.target.files[0]) {
                 const reader = new FileReader();
@@ -287,6 +336,7 @@
             }
         });
 
+        // --- GESTION ÉDITEUR TACTILE ---
         function initEditor() {
             const scaleX = CANVAS_WIDTH / userImage.width;
             const scaleY = CANVAS_HEIGHT / userImage.height;
@@ -344,23 +394,19 @@
             if (e.touches.length === 0) isDragging = false;
         });
 
+        // ========================================================
+        // CANVAS GÉNÉRIQUE & RENDU CYBER VIRAL
+        // ========================================================
         function drawScene(ctx, width, height, withText = false) {
-            const gradient = ctx.createLinearGradient(0, 0, width, height);
-            if (currentMode === 'fille') {
-                gradient.addColorStop(0, '#FFF9E6'); gradient.addColorStop(1, '#FFD1DC');
-            } else {
-                gradient.addColorStop(0, '#FFF9E6'); gradient.addColorStop(1, '#D0E8FF');
-            }
-            ctx.fillStyle = gradient;
+            ctx.fillStyle = "#ffffff";
             ctx.fillRect(0, 0, width, height);
 
             ctx.save();
-            ctx.translate(width / 2, height / 2 - 100); 
-            ctx.rotate(7 * Math.PI / 180); 
+            ctx.translate(width / 2, height / 2); 
             ctx.translate(imgPosX, imgPosY);
             ctx.scale(imgScale, imgScale);
             
-            ctx.filter = 'contrast(1.3) sepia(0.6) saturate(1.4) brightness(0.9)';
+            ctx.filter = 'contrast(1.1) brightness(1.05) saturate(0.95)';
             ctx.drawImage(userImage, -userImage.width / 2, -userImage.height / 2);
             ctx.restore(); 
 
@@ -369,30 +415,45 @@
             }
 
             if (withText) {
-                const phrases = currentMode === 'fille' ? phrasesFilles : phrasesGarcons;
-                const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
+                const now = new Date();
+                const monthText = APP_CONFIG.monthsFr[now.getMonth()] + " " + now.getFullYear();
                 
                 ctx.save();
-                ctx.font = "bold 95px 'Caveat', cursive";
                 ctx.textAlign = "center";
                 ctx.textBaseline = "middle";
-                
-                if (currentMode === 'garcon') {
-                    ctx.fillStyle = "#FFDE59";
-                    ctx.shadowColor = "rgba(0,0,0,0.8)";
-                    ctx.shadowBlur = 5;
-                    ctx.shadowOffsetX = 2;
-                    ctx.shadowOffsetY = 2;
-                } else {
-                    ctx.fillStyle = "#1a1a1a";
+
+                // 1. Rendu du Prénom (Effet Néon Cyberpunk)
+                if(APP_CONFIG.toggles.showChildName) {
+                    // Police Italique ultra-grasse
+                    ctx.font = `italic 900 120px '${APP_CONFIG.fonts.futuristic}'`;
+                    
+                    // Passe 1 : Le Halo Néon Cyan
+                    ctx.fillStyle = "#ffffff";
+                    ctx.shadowColor = "#00d2ff";
+                    ctx.shadowBlur = 30;
+                    ctx.shadowOffsetX = 0;
+                    ctx.shadowOffsetY = 0;
+                    wrapTextGen(ctx, selectedChildName, width / 2, height - 280, width - 150, 120);
+
+                    // Passe 2 : Le cœur blanc pur (superposé pour l'éclat)
+                    ctx.shadowBlur = 0;
+                    wrapTextGen(ctx, selectedChildName, width / 2, height - 280, width - 150, 120);
                 }
                 
-                wrapText(ctx, randomPhrase, width / 2, height - 215, width - 150, 95);
+                // 2. Rendu du Mois
+                if(APP_CONFIG.toggles.showMonthText) {
+                    // Police propre et lisible pour équilibrer
+                    ctx.font = `600 50px '${APP_CONFIG.fonts.base}'`;
+                    ctx.fillStyle = "#a0aec0"; 
+                    ctx.shadowBlur = 0; // Nettoyer l'ombre du prénom
+                    wrapTextGen(ctx, monthText.toUpperCase(), width / 2, height - 150, width - 200, 60);
+                }
+
                 ctx.restore();
             }
         }
 
-        function wrapText(context, text, x, y, maxWidth, lineHeight) {
+        function wrapTextGen(context, text, x, y, maxWidth, lineHeight) {
             const words = text.split(' ');
             let lines = [];
             let line = '';
@@ -409,7 +470,6 @@
             lines.push(line.trim());
 
             let startY = y - ((lines.length - 1) * lineHeight) / 2;
-            
             for(let i = 0; i < lines.length; i++) {
                 context.fillText(lines[i], x, startY + (i * lineHeight));
             }
@@ -435,14 +495,9 @@
             
             const downloadBtn = document.getElementById('download-link');
             downloadBtn.href = dataUrl;
-            downloadBtn.download = `Diplome-Hangeki-${currentMode}.jpg`;
+            downloadBtn.download = `Photo-${currentTheme}-${selectedChildName}.jpg`;
             
             showScreen('screen-result');
-
-            history.pushState(null, null, location.href);
-            window.onpopstate = function () {
-                history.go(1);
-            };
         }
     </script>
 </body>
