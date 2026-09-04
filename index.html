@@ -25,7 +25,7 @@
             --gradient-orange: linear-gradient(135deg, #ff8a44 0%, #e05338 100%);
             --cyan-neon: #00d2ff;
 
-            /* Neumorphic Double Shadows (Soft & Deep) */
+            /* Neumorphic Double Shadows */
             --shadow-clay-card: 
                 -4px -4px 10px rgba(255, 255, 255, 0.04),
                 inset -1px -1px 2px rgba(255, 255, 255, 0.02),
@@ -46,7 +46,6 @@
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
         html, body { height: 100%; width: 100%; font-family: 'Inter', sans-serif; background-color: var(--bg-deep); color: var(--text-pure); overflow: hidden; }
 
-        /* Noise Texture Overlay */
         body::before {
             content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3%3Ffilter id='noiseFilter'%3%3FfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3%3F/filter%3%3F%3Frect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3%3F/svg%3%3F");
@@ -54,12 +53,12 @@
         }
 
         /* === UI COMPONENTS === */
-        .page-header { width: 100%; text-align: center; padding: 20px 0; flex-shrink: 0; z-index: 10; position: relative; }
+        /* Header ajusté avec padding pour descendre le titre */
+        .page-header { width: 100%; text-align: center; padding: 35px 0 15px 0; flex-shrink: 0; z-index: 10; position: relative; }
         .header-copyright { position: absolute; top: 10px; left: 15px; font-size: 10px; font-weight: 600; color: var(--text-soft); }
-        .app-title { font-size: 20px; font-weight: 800; color: var(--text-pure); text-transform: uppercase; line-height: 1.3; }
-        .app-title span { color: #ff8a44; } /* L'accent orange sur le mois */
+        .app-title { font-size: 20px; font-weight: 800; color: var(--text-pure); text-transform: uppercase; line-height: 1.3; margin-top: 5px; }
+        .app-title span { color: #ff8a44; } 
 
-        /* Champ de texte Neumorphique (Saisie du prénom) */
         .neumorphic-input {
             width: 100%; max-width: 320px; appearance: none;
             background: var(--bg-deep); border-radius: 20px; padding: 18px 20px;
@@ -75,7 +74,6 @@
         }
         .neumorphic-input::placeholder { color: rgba(255,255,255,0.2); font-family: 'Inter', sans-serif; font-weight: 400; font-size: 15px; }
 
-        /* Avertissement de sécurité (Croquis 4) */
         .privacy-card {
             background: var(--bg-deep); border-radius: 12px; padding: 12px 15px;
             font-size: 11px; font-weight: 600; color: var(--text-soft); text-align: center;
@@ -84,27 +82,25 @@
         }
         .privacy-card span { color: var(--cyan-neon); font-weight: 700; }
 
-        /* Checkbox "Souris ou pas" (Croquis 5) */
         .checkbox-container {
             display: flex; align-items: center; justify-content: center; gap: 12px;
-            margin: 20px 0; font-size: 15px; font-weight: 700; color: var(--text-pure);
+            font-size: 14px; font-weight: 700; color: var(--text-pure);
         }
         .neumorphic-checkbox {
-            appearance: none; width: 28px; height: 28px;
-            background: var(--bg-deep); border-radius: 8px;
+            appearance: none; width: 24px; height: 24px;
+            background: var(--bg-deep); border-radius: 6px;
             box-shadow: var(--shadow-clay-pressed);
             display: flex; align-items: center; justify-content: center; cursor: pointer;
-            border: 1px solid rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.02); margin: 0;
         }
         .neumorphic-checkbox:checked::after {
-            content: '✔'; color: #ff8a44; font-size: 18px; font-weight: bold; text-shadow: 0 0 5px rgba(255, 138, 68, 0.5);
+            content: '✔'; color: #ff8a44; font-size: 16px; font-weight: bold; text-shadow: 0 0 5px rgba(255, 138, 68, 0.5);
         }
 
-        /* Modern Clay Toggle Switch */
         .toggle-container {
             width: 100%; max-width: 320px; display: flex; align-items: center; justify-content: space-between;
             background: var(--bg-ui); border-radius: 50px; padding: 10px 15px; box-shadow: var(--shadow-clay-pressed);
-            margin: 20px auto; border: 1px solid rgba(255,255,255,0.02);
+            margin: 0 auto; border: 1px solid rgba(255,255,255,0.02);
         }
         .toggle-label { font-size: 13px; font-weight: 600; color: var(--text-soft); }
         .switch { position: relative; display: inline-block; width: 56px; height: 30px; }
@@ -122,7 +118,6 @@
         input:checked + .slider { background: var(--gradient-blue); }
         input:checked + .slider:before { transform: translateX(26px); }
 
-        /* Le "Magic Container" générique 9:16 pour les photos */
         .photo-frame-container {
             flex: 1; width: 100%; min-height: 0; display: flex; justify-content: center; align-items: center; padding: 10px 20px; position: relative;
         }
@@ -134,7 +129,6 @@
         #final-render, #touch-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; z-index: 10; }
         #touch-layer { z-index: 20; touch-action: none; }
 
-        /* Instruction de Zoom (Croquis 6) */
         .info-badge {
             position: absolute; top: 0px; left: 50%; transform: translateX(-50%); z-index: 50;
             background: var(--gradient-orange); border-radius: 10px; padding: 8px 14px;
@@ -144,7 +138,6 @@
         }
         @keyframes pulseBadge { 0% { transform: translateX(-50%) scale(1); } 50% { transform: translateX(-50%) scale(1.05); } 100% { transform: translateX(-50%) scale(1); } }
 
-        /* Footer & Buttons */
         .btn-footer {
             width: 100%; display: flex; flex-direction: column; gap: 15px;
             padding: 10px calc(20px + env(safe-area-inset-bottom)) calc(20px + env(safe-area-inset-bottom));
@@ -164,7 +157,7 @@
             border-radius: var(--border-radius-btn) var(--border-radius-btn) 0 0;
         }
 
-        .btn-primary { background: var(--gradient-orange); } /* ORANGE POUR ACTION PRINCIPALE */
+        .btn-primary { background: var(--gradient-orange); } 
         .btn-success { background: var(--gradient-orange); } 
         .btn-secondary { background: var(--bg-ui); color: var(--text-pure); }
         .btn-blue { background: var(--gradient-blue); }
@@ -172,7 +165,6 @@
         .clay-btn:hover { transform: translateY(-2px); }
         .clay-btn:active { transform: translateY(1px) scale(0.98); box-shadow: var(--shadow-clay-pressed); }
 
-        /* Pages Management */
         .screen { display: none; width: 100%; height: 100%; position: absolute; top: 0; left: 0; flex-direction: column; overflow: hidden; }
         .screen.active { display: flex; animation: clayPop 0.3s var(--ease-in-out) forwards; }
         @keyframes clayPop { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
@@ -187,32 +179,35 @@
     <div id="app-container" style="height: 100%; width: 100%; position: relative;">
         
         <!-- ======================================================== -->
-        <!-- SCREEN 1: ACCUEIL (Croquis 1 & 4) -->
+        <!-- SCREEN 1: ACCUEIL -->
         <!-- ======================================================== -->
         <div id="screen-home" class="screen active">
             <header class="page-header">
                 <div class="header-copyright">© Copyright Yoni Brd</div>
-                <!-- Titre Dynamique généré en JS -->
                 <div id="dynamic-month-title" class="app-title">TA CARTE COLLECTOR<br>DU MOIS DE...</div>
             </header>
 
-            <main style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px;">
+            <main style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 0 20px;">
                 
                 <!-- 1. Saisie du prénom -->
-                <div style="width: 100%; text-align: center;">
-                    <label style="display:block; margin-bottom: 10px; font-size: 13px; font-weight: 700; color: var(--text-soft);">1. ENTRE TON PRÉNOM / SURNOM</label>
+                <div style="width: 100%; text-align: center; margin-bottom: 25px;">
+                    <label style="display:block; margin-bottom: 12px; font-size: 17px; font-weight: 800; color: var(--cyan-neon); letter-spacing: 1px;">
+                        1. ENTRE TON PRÉNOM / SURNOM
+                    </label>
                     <input type="text" id="child-name-input" class="neumorphic-input" placeholder="Prénom..." autocomplete="off">
                 </div>
 
-                <!-- Avertissement de sécurité (Croquis 4) -->
+                <!-- Avertissement de sécurité -->
                 <div class="privacy-card">
                     🔒 <span>100% SÉCURISÉ</span><br>
                     La photo reste en local sur l'appareil. Seul le prénom est utilisé pour la carte.
                 </div>
 
-                <!-- 2. Thème (Croquis 5) -->
-                <div style="margin-top: 30px; width: 100%;">
-                    <label style="display:block; text-align: center; font-size: 13px; font-weight: 700; color: var(--text-soft);">2. STYLE DE LA CARTE</label>
+                <!-- 2. Thème -->
+                <div style="margin-top: 35px; width: 100%;">
+                    <label style="display:block; text-align: center; margin-bottom: 15px; font-size: 17px; font-weight: 800; color: var(--cyan-neon); letter-spacing: 1px;">
+                        2. STYLE DE LA CARTE
+                    </label>
                     <div class="toggle-container">
                         <span class="toggle-label">Cartoon</span>
                         <label class="switch">
@@ -224,20 +219,23 @@
                 </div>
             </main>
 
+            <!-- Footer avec Checkbox intégrée sur le bouton -->
             <footer class="btn-footer">
-                <!-- Checkbox (Croquis 5) -->
-                <label class="checkbox-container">
-                    <input type="checkbox" class="neumorphic-checkbox">
-                    Souris... OU PAS 😎
-                </label>
-                <button class="clay-btn btn-primary" onclick="triggerFileSelect()">📷 PRENDRE LA PHOTO</button>
+                <div style="position: relative; width: 100%;">
+                    <label class="checkbox-container" style="position: absolute; top: -16px; left: 50%; transform: translateX(-50%); z-index: 10; margin: 0; background: var(--bg-ui); padding: 6px 18px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 6px 12px rgba(0,0,0,0.4);">
+                        <input type="checkbox" class="neumorphic-checkbox">
+                        <span>Souris... OU PAS 😎</span>
+                    </label>
+                    <!-- Bouton avec padding ajusté pour accueillir la checkbox en haut -->
+                    <button class="clay-btn btn-primary" onclick="triggerFileSelect()" style="padding-top: 26px; padding-bottom: 18px;">📷 PRENDRE LA PHOTO</button>
+                </div>
             </footer>
             
             <input type="file" id="file-input" accept="image/*">
         </div>
 
         <!-- ======================================================== -->
-        <!-- SCREEN 2: AJUSTEMENT (Croquis 6 - Retouche Manuelle) -->
+        <!-- SCREEN 2: AJUSTEMENT (Zoom / Cadrage) -->
         <!-- ======================================================== -->
         <div id="screen-edit" class="screen">
             <header class="page-header" style="padding-bottom: 5px;">
@@ -245,7 +243,6 @@
             </header>
             
             <div class="photo-frame-container">
-                <!-- Badge d'instruction au dessus de l'image -->
                 <div class="info-badge">👉 PINCEZ POUR ZOOMER / GLISSEZ</div>
                 <div class="magic-card-9-16">
                     <canvas id="canvas-preview"></canvas>
@@ -260,7 +257,7 @@
         </div>
 
         <!-- ======================================================== -->
-        <!-- SCREEN 3: RÉSULTAT FINAL (Croquis 7) -->
+        <!-- SCREEN 3: RÉSULTAT FINAL -->
         <!-- ======================================================== -->
         <div id="screen-result" class="screen">
              <header class="page-header" style="padding-bottom: 5px;">
@@ -344,7 +341,6 @@
             document.getElementById('file-input').click();
         }
 
-        // --- GESTION PHOTO ---
         document.getElementById('file-input').addEventListener('change', function(e) {
             if (e.target.files && e.target.files[0]) {
                 const reader = new FileReader();
@@ -358,7 +354,6 @@
             }
         });
 
-        // --- GESTION ÉDITEUR TACTILE ---
         function initEditor() {
             const scaleX = CANVAS_WIDTH / userImage.width;
             const scaleY = CANVAS_HEIGHT / userImage.height;
@@ -417,14 +412,13 @@
         });
 
         // ========================================================
-        // CANVAS & RETOUCHE MANUELLE 7° (Croquis 6)
+        // CANVAS & RETOUCHE MANUELLE 7°
         // ========================================================
         function drawScene(ctx, width, height, withText = false) {
             ctx.fillStyle = "#ffffff";
             ctx.fillRect(0, 0, width, height);
 
             ctx.save();
-            // LA ROTATION INDISPENSABLE DE 7° EST BIEN LÀ !
             ctx.translate(width / 2, height / 2 - 100); 
             ctx.rotate(7 * Math.PI / 180); 
             ctx.translate(imgPosX, imgPosY);
@@ -446,7 +440,6 @@
                 ctx.textAlign = "center";
                 ctx.textBaseline = "middle";
 
-                // Rendu du Prénom (Effet Néon)
                 ctx.font = `italic 900 120px '${APP_CONFIG.fonts.futuristic}'`;
                 ctx.fillStyle = "#ffffff";
                 ctx.shadowColor = "#00d2ff";
@@ -456,7 +449,6 @@
                 ctx.shadowBlur = 0;
                 wrapTextGen(ctx, selectedChildName, width / 2, height - 280, width - 150, 120);
                 
-                // Rendu du Mois
                 ctx.font = `600 50px '${APP_CONFIG.fonts.base}'`;
                 ctx.fillStyle = "#a0aec0"; 
                 wrapTextGen(ctx, monthText.toUpperCase(), width / 2, height - 150, width - 200, 60);
