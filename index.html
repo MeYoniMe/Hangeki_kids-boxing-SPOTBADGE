@@ -56,12 +56,10 @@
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: -1; pointer-events: none;
         }
         
-        /* Les Auras douces */
         .aura { position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.2; animation: auraFloat 20s infinite ease-in-out alternate; }
         .aura-1 { width: 350px; height: 350px; background: var(--cyan-neon); top: -10%; left: -20%; }
         .aura-2 { width: 300px; height: 300px; background: #ff8a44; bottom: -10%; right: -20%; animation-delay: -10s; }
 
-        /* Les points lumineux (Lucioles) */
         .particle { position: absolute; border-radius: 50%; background: #ffffff; box-shadow: 0 0 15px #ffffff, 0 0 30px #ffffff; opacity: 0.3; animation: floatWave 12s infinite ease-in-out alternate; }
         .p1 { width: 5px; height: 5px; top: 20%; left: 20%; animation-duration: 15s; }
         .p2 { width: 3px; height: 3px; top: 70%; left: 80%; animation-duration: 18s; animation-delay: -4s; background: var(--cyan-neon); box-shadow: 0 0 15px var(--cyan-neon); }
@@ -233,6 +231,7 @@
         </div>
     </div>
 
+    <!-- On le met en display:none par sécurité au chargement, le JS va l'afficher immédiatement si tout est OK -->
     <div id="app-container" style="height: 100%; width: 100%; position: relative; display: none;">
         
         <div id="screen-home" class="screen active">
@@ -358,7 +357,12 @@
         function checkSecuritySession() {
             try {
                 const urlParams = new URLSearchParams(window.location.search);
-                if (urlParams.has('test')) return true;
+                
+                // Si on force le test, on affiche l'app directement
+                if (urlParams.has('test')) {
+                    document.getElementById('app-container').style.display = 'block';
+                    return true;
+                }
 
                 if (urlParams.has('scan')) {
                     localStorage.setItem('hangeki_session_time', Date.now());
@@ -376,9 +380,14 @@
                     timeoutScreen.classList.add('active');
                     return false;
                 }
+                
+                // Tout est valide, on AFFICHE le container de l'application !
+                document.getElementById('app-container').style.display = 'block';
                 return true; 
             } catch(e) {
                 console.error("Sécurité anti-triche bloquée par le navigateur:", e);
+                // Si le navigateur bloque, on laisse passer par défaut pour éviter l'écran blanc
+                document.getElementById('app-container').style.display = 'block';
                 return true; 
             }
         }
@@ -513,7 +522,6 @@
             }
 
             if (withText) {
-                // ZONE FLOUE AGRANDIE (400px au lieu de 360) pour les textes plus grands
                 ctx.save();
                 ctx.beginPath();
                 ctx.rect(0, height - 400, width, 400);
@@ -544,7 +552,6 @@
                 ctx.textAlign = "center";
                 ctx.textBaseline = "middle";
 
-                // PRÉNOM : PLUS HAUT (height - 280) ET PLUS GRAND (160px)
                 ctx.font = `700 160px 'Caveat', cursive`;
                 ctx.fillStyle = "#ffffff";
                 ctx.shadowColor = currentTheme === 'cyber' ? "#00d2ff" : "#ff8a44";
@@ -554,7 +561,6 @@
                 ctx.shadowBlur = 0;
                 wrapTextGen(ctx, selectedChildName, width / 2, height - 280, width - 100, 160);
                 
-                // DATE : PLUS HAUTE (height - 130), PLUS GRANDE (85px), POLICE FREDOKA (Fun/Ronde)
                 ctx.font = `600 85px 'Fredoka', sans-serif`;
                 ctx.fillStyle = "#ffde59"; 
                 ctx.shadowColor = "rgba(0,0,0,0.8)";
@@ -625,4 +631,3 @@
     <script data-goatcounter="https://compteur-boxe-kids.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
-
