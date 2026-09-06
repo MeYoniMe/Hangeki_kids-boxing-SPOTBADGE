@@ -7,10 +7,10 @@
     
     <link rel="icon" type="image/png" href="club_favicon.png" />
 
-    <!-- Google Fonts -->
+    <!-- Google Fonts : Inter (UI), Orbitron (Cyber), Fredoka (Date Fun), Caveat (Fun & Jeune Prénom) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@700&family=Inter:wght@400;600;700;800&family=Orbitron:ital,wght@0,600;0,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Fredoka:wght@500;600&family=Inter:wght@400;600;700;800&family=Orbitron:ital,wght@0,600;0,800;1,900&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -40,7 +40,7 @@
         body { 
             height: 100dvh; width: 100%; font-family: 'Inter', sans-serif; 
             background: linear-gradient(145deg, #091322 0%, #13274F 50%, #1d4ed8 100%);
-            color: #ffffff; overflow: hidden; display: flex; flex-direction: column;
+            color: #ffffff; overflow: hidden; display: flex; flex-direction: column; position: relative;
         }
 
         body::before {
@@ -48,6 +48,37 @@
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3%3Ffilter id='noiseFilter'%3%3FfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3%3F/filter%3%3F%3Frect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3%3F/svg%3%3F");
             opacity: 0.04; pointer-events: none; z-index: -1;
         }
+
+        /* =========================================
+           ANIMATION CHIC EN FOND (Auras & Pointillés)
+           ========================================= */
+        .ambient-background {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: -1; pointer-events: none;
+        }
+        
+        /* Les Auras douces */
+        .aura { position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.2; animation: auraFloat 20s infinite ease-in-out alternate; }
+        .aura-1 { width: 350px; height: 350px; background: var(--cyan-neon); top: -10%; left: -20%; }
+        .aura-2 { width: 300px; height: 300px; background: #ff8a44; bottom: -10%; right: -20%; animation-delay: -10s; }
+
+        /* Les points lumineux (Lucioles) */
+        .particle { position: absolute; border-radius: 50%; background: #ffffff; box-shadow: 0 0 15px #ffffff, 0 0 30px #ffffff; opacity: 0.3; animation: floatWave 12s infinite ease-in-out alternate; }
+        .p1 { width: 5px; height: 5px; top: 20%; left: 20%; animation-duration: 15s; }
+        .p2 { width: 3px; height: 3px; top: 70%; left: 80%; animation-duration: 18s; animation-delay: -4s; background: var(--cyan-neon); box-shadow: 0 0 15px var(--cyan-neon); }
+        .p3 { width: 6px; height: 6px; top: 40%; left: 70%; animation-duration: 22s; animation-delay: -8s; background: #ff8a44; box-shadow: 0 0 15px #ff8a44; }
+        .p4 { width: 4px; height: 4px; top: 80%; left: 30%; animation-duration: 16s; animation-delay: -12s; }
+        .p5 { width: 7px; height: 7px; top: 10%; left: 85%; animation-duration: 25s; animation-delay: -2s; opacity: 0.15; }
+
+        @keyframes auraFloat {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(80px, 120px) scale(1.1); }
+        }
+        @keyframes floatWave {
+            0% { transform: translate(0, 0); opacity: 0.1; }
+            50% { transform: translate(40px, -40px); opacity: 0.6; }
+            100% { transform: translate(-30px, 30px); opacity: 0.2; }
+        }
+        /* ========================================= */
 
         .preload-font { position: absolute; left: -9999px; opacity: 0; }
 
@@ -84,20 +115,10 @@
         .privacy-card span { color: var(--cyan-neon); font-weight: 700; }
 
         .iphone-alert {
-            background: rgba(255, 60, 48, 0.1); 
-            border: 2px solid #ff8a44;
-            border-radius: 12px; 
-            padding: 12px 15px;
-            font-size: 12px; 
-            font-weight: 800; 
-            color: #ffffff; 
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(255, 138, 68, 0.2);
-            width: 100%; 
-            max-width: 320px; 
-            margin: 0 auto 10px auto; 
-            line-height: 1.4;
-            animation: pulseAlert 2s infinite;
+            background: rgba(255, 60, 48, 0.1); border: 2px solid #ff8a44; border-radius: 12px; 
+            padding: 12px 15px; font-size: 12px; font-weight: 800; color: #ffffff; text-align: center;
+            box-shadow: 0 4px 15px rgba(255, 138, 68, 0.2); width: 100%; max-width: 320px; 
+            margin: 0 auto 10px auto; line-height: 1.4; animation: pulseAlert 2s infinite;
         }
         .iphone-alert span { color: #ff8a44; font-size: 15px; }
         @keyframes pulseAlert {
@@ -151,10 +172,7 @@
         .clay-btn:hover { transform: translateY(-2px); }
         .clay-btn:active { 
             transform: translateY(6px) scale(0.96); 
-            box-shadow: 
-                0px 0px 0px rgba(0, 0, 0, 0), 
-                inset 6px 6px 15px rgba(0, 0, 0, 0.9), 
-                inset -3px -3px 8px rgba(255, 255, 255, 0.1); 
+            box-shadow: 0px 0px 0px rgba(0, 0, 0, 0), inset 6px 6px 15px rgba(0, 0, 0, 0.9), inset -3px -3px 8px rgba(255, 255, 255, 0.1); 
             filter: brightness(0.8); 
         }
 
@@ -183,18 +201,27 @@
         
         #file-input, #render-canvas { display: none; }
 
-        #timeout-screen {
-            background: var(--bg-deep); justify-content: center; align-items: center; padding: 30px; z-index: 9999;
-        }
+        #timeout-screen { background: var(--bg-deep); justify-content: center; align-items: center; padding: 30px; z-index: 9999; }
     </style>
 </head>
 <body>
+
+    <!-- Animation Chic en arrière-plan -->
+    <div class="ambient-background">
+        <div class="aura aura-1"></div>
+        <div class="aura aura-2"></div>
+        <div class="particle p1"></div>
+        <div class="particle p2"></div>
+        <div class="particle p3"></div>
+        <div class="particle p4"></div>
+        <div class="particle p5"></div>
+    </div>
     
     <div class="preload-font" style="font-family: 'Orbitron';">Orbitron</div>
     <div class="preload-font" style="font-family: 'Caveat';">Caveat</div>
     <div class="preload-font" style="font-family: 'Bebas Neue';">Bebas</div>
+    <div class="preload-font" style="font-family: 'Fredoka';">Fredoka</div>
 
-    <!-- ECRAN DE SÉCURITÉ TIMEOUT (Anti-Triche 1h) -->
     <div id="timeout-screen" class="screen">
         <div class="privacy-card" style="max-width: 350px; padding: 30px 20px; box-shadow: var(--shadow-clay-card); text-align: center;">
             <div style="font-size: 50px; margin-bottom: 15px;">⏳</div>
@@ -206,8 +233,7 @@
         </div>
     </div>
 
-    <!-- L'application principale est affichée par défaut, mais cachée par JS si le temps est écoulé -->
-    <div id="app-container" style="height: 100%; width: 100%; position: relative;">
+    <div id="app-container" style="height: 100%; width: 100%; position: relative; display: none;">
         
         <div id="screen-home" class="screen active">
             <header class="page-header">
@@ -275,7 +301,7 @@
 
         <div id="screen-edit" class="screen" style="justify-content: flex-start; padding: 0;">
             <div class="editor-wrapper">
-                <div class="info-badge">👉 PINCE POUR ZOOMER / GLISSE</div>
+                <div class="info-badge">👉 PINCEZ POUR ZOOMER / GLISSEZ</div>
                 <canvas id="canvas-preview"></canvas>
                 <div id="touch-layer"></div>
             </div>
@@ -294,7 +320,7 @@
             
             <div class="controls-footer" style="flex-direction: column; gap: 8px;">
                 <div class="iphone-alert">
-                    ⚠️ <span>SUR IPHONE</span><br>Maintiens le doigt sur la photo<br>pour l'enregistrer dans l'album.
+                    ⚠️ <span>SUR IPHONE</span><br>Maintenez le doigt sur la photo<br>pour l'enregistrer dans l'album.
                 </div>
                 <a id="download-link" class="clay-btn btn-success" style="text-decoration: none; text-align: center;">💾 ENREGISTRER DANS L'ALBUM</a>
             </div>
@@ -329,14 +355,9 @@
         const CANVAS_WIDTH = 1080;
         const CANVAS_HEIGHT = 1920;
 
-        // ========================================================
-        // SÉCURITÉ : VÉRIFICATION DU QR CODE (BLINDÉE)
-        // ========================================================
         function checkSecuritySession() {
             try {
                 const urlParams = new URLSearchParams(window.location.search);
-                
-                // MODE DEV : Permet de tester chez soi en ajoutant ?test=1
                 if (urlParams.has('test')) return true;
 
                 if (urlParams.has('scan')) {
@@ -355,10 +376,8 @@
                     timeoutScreen.classList.add('active');
                     return false;
                 }
-                
                 return true; 
             } catch(e) {
-                // En cas de navigation privée très stricte (ex: Safari iOS), on laisse passer pour éviter le crash
                 console.error("Sécurité anti-triche bloquée par le navigateur:", e);
                 return true; 
             }
@@ -494,9 +513,10 @@
             }
 
             if (withText) {
+                // ZONE FLOUE AGRANDIE (400px au lieu de 360) pour les textes plus grands
                 ctx.save();
                 ctx.beginPath();
-                ctx.rect(0, height - 360, width, 360);
+                ctx.rect(0, height - 400, width, 400);
                 ctx.clip(); 
                 
                 ctx.filter = 'blur(15px) brightness(0.4)'; 
@@ -524,21 +544,23 @@
                 ctx.textAlign = "center";
                 ctx.textBaseline = "middle";
 
-                ctx.font = `700 140px 'Caveat', cursive`;
+                // PRÉNOM : PLUS HAUT (height - 280) ET PLUS GRAND (160px)
+                ctx.font = `700 160px 'Caveat', cursive`;
                 ctx.fillStyle = "#ffffff";
                 ctx.shadowColor = currentTheme === 'cyber' ? "#00d2ff" : "#ff8a44";
                 ctx.shadowBlur = 25;
-                wrapTextGen(ctx, selectedChildName, width / 2, height - 230, width - 150, 140);
+                wrapTextGen(ctx, selectedChildName, width / 2, height - 280, width - 100, 160);
                 
                 ctx.shadowBlur = 0;
-                wrapTextGen(ctx, selectedChildName, width / 2, height - 230, width - 150, 140);
+                wrapTextGen(ctx, selectedChildName, width / 2, height - 280, width - 100, 160);
                 
-                ctx.font = `400 70px 'Bebas Neue', sans-serif`;
+                // DATE : PLUS HAUTE (height - 130), PLUS GRANDE (85px), POLICE FREDOKA (Fun/Ronde)
+                ctx.font = `600 85px 'Fredoka', sans-serif`;
                 ctx.fillStyle = "#ffde59"; 
                 ctx.shadowColor = "rgba(0,0,0,0.8)";
                 ctx.shadowBlur = 8;
                 ctx.shadowOffsetY = 3;
-                wrapTextGen(ctx, monthText, width / 2, height - 90, width - 200, 70);
+                wrapTextGen(ctx, monthText, width / 2, height - 130, width - 100, 85);
 
                 ctx.restore();
             }
@@ -600,7 +622,7 @@
         }
     </script>
     
-    <!-- Script GoatCounter -->
     <script data-goatcounter="https://compteur-boxe-kids.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
+```eof
