@@ -1,3 +1,19 @@
+<!--
+======================================================================
+© Copyright 2026 Bressard Yoni. All Rights Reserved. / Tous droits réservés.
+
+PROPRIETARY AND CONFIDENTIAL / PROPRIÉTÉ EXCLUSIVE ET CONFIDENTIELLE
+This source code, its user interface, and software architecture are the 
+exclusive property of Bressard Yoni. Any unauthorized reproduction, 
+modification, distribution, or reverse engineering is strictly prohibited 
+and protected by intellectual property laws.
+
+Ce code source, son interface utilisateur et son architecture logicielle 
+sont la propriété exclusive de Bressard Yoni. Toute reproduction, 
+modification, distribution ou rétro-ingénierie non autorisée est 
+strictement interdite par la loi sur la propriété intellectuelle.
+======================================================================
+-->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -360,7 +376,7 @@
         let imgPosX = 0;
         let imgPosY = 0;
         
-        let appCurrentMonthIndex = new Date().getMonth(); // Par défaut, mois réel
+        let appCurrentMonthIndex = new Date().getMonth(); 
 
         const CANVAS_WIDTH = 1080;
         const CANVAS_HEIGHT = 1920;
@@ -369,12 +385,10 @@
             try {
                 const urlParams = new URLSearchParams(window.location.search);
                 
-                // MACHINE À VOYAGER DANS LE TEMPS : force le mois si &mois=X est présent
                 if (urlParams.has('mois')) {
                     const forcedMonth = parseInt(urlParams.get('mois'));
                     if(!isNaN(forcedMonth) && forcedMonth >= 1 && forcedMonth <= 12) {
-                        appCurrentMonthIndex = forcedMonth - 1; // JS compte de 0 à 11
-                        console.log("Mois forcé pour le test :", APP_CONFIG.monthsFr[appCurrentMonthIndex]);
+                        appCurrentMonthIndex = forcedMonth - 1; 
                     }
                 }
 
@@ -413,7 +427,6 @@
             if (!checkSecuritySession()) return; 
             setInterval(checkSecuritySession, 60000);
             
-            // Utilise appCurrentMonthIndex au lieu de Date().getMonth() pour permettre le voyage dans le temps
             const currentMonthStr = APP_CONFIG.monthsFr[appCurrentMonthIndex].toUpperCase();
             const startsWithVowel = ['A', 'E', 'I', 'O', 'U', 'Y'].includes(currentMonthStr[0]);
             const prefix = startsWithVowel ? "D'" : "DE ";
@@ -453,13 +466,11 @@
 
         document.getElementById('file-input').addEventListener('change', function(e) {
             if (e.target.files && e.target.files[0]) {
-                // Affiche le loader
                 document.getElementById('loading-overlay').style.display = 'flex';
                 
                 const reader = new FileReader();
                 reader.onload = function(event) {
                     userImage.onload = function() {
-                        // LA CORRECTION DU FOND BLANC EST ICI : On s'assure que le cadre est aussi chargé
                         if (!frameImage.complete) {
                             frameImage.onload = function() {
                                 initEditor();
@@ -633,10 +644,8 @@
         }
 
         function generateFinal() {
-            // Afficher le loader pendant la fusion HD
             document.getElementById('loading-overlay').style.display = 'flex';
             
-            // Petit délai pour permettre au navigateur d'afficher le loader
             setTimeout(() => {
                 const renderCanvas = document.getElementById('render-canvas');
                 const ctx = renderCanvas.getContext('2d');
