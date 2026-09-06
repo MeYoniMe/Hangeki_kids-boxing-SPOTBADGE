@@ -200,11 +200,15 @@
         #file-input, #render-canvas { display: none; }
 
         #timeout-screen { background: var(--bg-deep); justify-content: center; align-items: center; padding: 30px; z-index: 9999; }
+        
+        /* Loader overlay for image processing */
+        #loading-overlay { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center; flex-direction: column; }
+        .spinner { border: 4px solid rgba(255, 255, 255, 0.1); border-top: 4px solid var(--cyan-neon); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 15px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-    <!-- Animation Chic en arrière-plan -->
     <div class="ambient-background">
         <div class="aura aura-1"></div>
         <div class="aura aura-2"></div>
@@ -231,7 +235,12 @@
         </div>
     </div>
 
-    <!-- On le met en display:none par sécurité au chargement, le JS va l'afficher immédiatement si tout est OK -->
+    <!-- Overlay de chargement pour la fusion photo -->
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+        <div style="font-family: 'Orbitron'; color: var(--cyan-neon); font-size: 14px; letter-spacing: 1px;">TRAITEMENT EN COURS...</div>
+    </div>
+
     <div id="app-container" style="height: 100%; width: 100%; position: relative; display: none;">
         
         <div id="screen-home" class="screen active">
@@ -351,6 +360,8 @@
         let imgPosX = 0;
         let imgPosY = 0;
         
+        let appCurrentMonthIndex = new Date().getMonth(); // Par défaut, mois réel
+
         const CANVAS_WIDTH = 1080;
         const CANVAS_HEIGHT = 1920;
 
@@ -358,7 +369,15 @@
             try {
                 const urlParams = new URLSearchParams(window.location.search);
                 
-                // Si on force le test, on affiche l'app directement
+                // MACHINE À VOYAGER DANS LE TEMPS : force le mois si &mois=X est présent
+                if (urlParams.has('mois')) {
+                    const forcedMonth = parseInt(urlParams.get('mois'));
+                    if(!isNaN(forcedMonth) && forcedMonth >= 1 && forcedMonth <= 12) {
+                        appCurrentMonthIndex = forcedMonth - 1; // JS compte de 0 à 11
+                        console.log("Mois forcé pour le test :", APP_CONFIG.monthsFr[appCurrentMonthIndex]);
+                    }
+                }
+
                 if (urlParams.has('test')) {
                     document.getElementById('app-container').style.display = 'block';
                     return true;
@@ -381,12 +400,10 @@
                     return false;
                 }
                 
-                // Tout est valide, on AFFICHE le container de l'application !
                 document.getElementById('app-container').style.display = 'block';
                 return true; 
             } catch(e) {
                 console.error("Sécurité anti-triche bloquée par le navigateur:", e);
-                // Si le navigateur bloque, on laisse passer par défaut pour éviter l'écran blanc
                 document.getElementById('app-container').style.display = 'block';
                 return true; 
             }
@@ -396,7 +413,8 @@
             if (!checkSecuritySession()) return; 
             setInterval(checkSecuritySession, 60000);
             
-            const currentMonthStr = APP_CONFIG.monthsFr[new Date().getMonth()].toUpperCase();
+            // Utilise appCurrentMonthIndex au lieu de Date().getMonth() pour permettre le voyage dans le temps
+            const currentMonthStr = APP_CONFIG.monthsFr[appCurrentMonthIndex].toUpperCase();
             const startsWithVowel = ['A', 'E', 'I', 'O', 'U', 'Y'].includes(currentMonthStr[0]);
             const prefix = startsWithVowel ? "D'" : "DE ";
             document.getElementById('dynamic-month-title').innerHTML = `CRÉE TA CARTE COLLECTOR<br>${prefix}<span>${currentMonthStr}</span>`;
@@ -421,24 +439,36 @@
             selectedChildName = nameInput; 
             currentTheme = document.querySelector('input[name="theme_choice"]:checked').value;
             
-            const currentMonthSlug = APP_CONFIG.monthSlugs[new Date().getMonth()];
+            const currentMonthSlug = APP_CONFIG.monthSlugs[appCurrentMonthIndex];
             document.getElementById('pose-model-img').src = `pose_${currentMonthSlug}.png`;
             
             showScreen('screen-pose');
         }
 
         function triggerFileSelect() {
-            const currentMonthSlug = APP_CONFIG.monthSlugs[new Date().getMonth()];
+            const currentMonthSlug = APP_CONFIG.monthSlugs[appCurrentMonthIndex];
             frameImage.src = `frame_${currentTheme}_${currentMonthSlug}.png`;
             document.getElementById('file-input').click();
         }
 
         document.getElementById('file-input').addEventListener('change', function(e) {
             if (e.target.files && e.target.files[0]) {
+                // Affiche le loader
+                document.getElementById('loading-overlay').style.display = 'flex';
+                
                 const reader = new FileReader();
                 reader.onload = function(event) {
                     userImage.onload = function() {
-                        initEditor();
+                        // LA CORRECTION DU FOND BLANC EST ICI : On s'assure que le cadre est aussi chargé
+                        if (!frameImage.complete) {
+                            frameImage.onload = function() {
+                                initEditor();
+                                document.getElementById('loading-overlay').style.display = 'none';
+                            }
+                        } else {
+                            initEditor();
+                            document.getElementById('loading-overlay').style.display = 'none';
+                        }
                     }
                     userImage.src = event.target.result;
                 }
@@ -543,10 +573,9 @@
                 }
                 ctx.restore(); 
 
-                const now = new Date();
-                const seasonMonth = (now.getMonth() + 4) % 12 + 1; 
-                const currentYear = now.getFullYear();
-                const monthText = `${APP_CONFIG.monthsFr[now.getMonth()].toUpperCase()} #${seasonMonth} - ${currentYear}`;
+                const currentYear = new Date().getFullYear();
+                const seasonMonth = (appCurrentMonthIndex + 4) % 12 + 1; 
+                const monthText = `${APP_CONFIG.monthsFr[appCurrentMonthIndex].toUpperCase()} #${seasonMonth} - ${currentYear}`;
                 
                 ctx.save();
                 ctx.textAlign = "center";
@@ -604,27 +633,34 @@
         }
 
         function generateFinal() {
-            const renderCanvas = document.getElementById('render-canvas');
-            const ctx = renderCanvas.getContext('2d');
+            // Afficher le loader pendant la fusion HD
+            document.getElementById('loading-overlay').style.display = 'flex';
             
-            drawScene(ctx, CANVAS_WIDTH, CANVAS_HEIGHT, true);
-            const dataUrl = renderCanvas.toDataURL('image/jpeg', 0.95);
-            
-            document.getElementById('final-image').src = dataUrl;
-            
-            const downloadBtn = document.getElementById('download-link');
-            downloadBtn.href = dataUrl;
-            downloadBtn.download = `Photo-${currentTheme}-${selectedChildName}.jpg`;
-            
-            showScreen('screen-result');
+            // Petit délai pour permettre au navigateur d'afficher le loader
+            setTimeout(() => {
+                const renderCanvas = document.getElementById('render-canvas');
+                const ctx = renderCanvas.getContext('2d');
+                
+                drawScene(ctx, CANVAS_WIDTH, CANVAS_HEIGHT, true);
+                const dataUrl = renderCanvas.toDataURL('image/jpeg', 0.95);
+                
+                document.getElementById('final-image').src = dataUrl;
+                
+                const downloadBtn = document.getElementById('download-link');
+                downloadBtn.href = dataUrl;
+                downloadBtn.download = `Photo-${currentTheme}-${selectedChildName}.jpg`;
+                
+                document.getElementById('loading-overlay').style.display = 'none';
+                showScreen('screen-result');
 
-            if (window.goatcounter) {
-                window.goatcounter.count({
-                    path:  'photo-generee', 
-                    title: 'Photo Generee',
-                    event: true,
-                });
-            }
+                if (window.goatcounter) {
+                    window.goatcounter.count({
+                        path:  'photo-generee', 
+                        title: 'Photo Generee',
+                        event: true,
+                    });
+                }
+            }, 50);
         }
     </script>
     
